@@ -185,6 +185,7 @@
           Personal Files
         </p>
         <svg
+          v-if="!miniVariant"
           class="ml-0 mr-3 text-[#788bf8]"
           xmlns="http://www.w3.org/2000/svg"
           width="17"
@@ -244,6 +245,7 @@
           Workspace Files
         </p>
         <svg
+          v-if="!miniVariant"
           class="ml-0 mr-3 text-[#788bf8]"
           xmlns="http://www.w3.org/2000/svg"
           width="17"
