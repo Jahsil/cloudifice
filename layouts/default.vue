@@ -150,7 +150,10 @@
               "
               v-for="(item, index) in mainLinks"
               :key="index"
-              class="flex items-center space-x-4 py-3"
+              :class="{
+                'flex items-center space-x-4 py-3': true,
+                'bg-[#f7f7f7] rounded-lg': selectedItem === item.id,
+              }"
             >
               <svg
                 class="text-[#788bf8]"
@@ -211,7 +214,10 @@
               "
               v-for="(item, index) in personalLinks"
               :key="index"
-              class="flex items-center space-x-3 py-2"
+              :class="{
+                'flex items-center space-x-3 py-2': true,
+                'bg-[#f7f7f7] rounded-lg': selectedItem === item.id,
+              }"
             >
               <svg
                 class="text-[#788bf8]"
@@ -267,7 +273,10 @@
               "
               v-for="(item, index) in workplaceLinks"
               :key="index"
-              class="flex items-center space-x-3 py-2"
+              :class="{
+                'flex items-center space-x-3 py-2': true,
+                'bg-[#f7f7f7] rounded-lg': selectedItem === item.id,
+              }"
             >
               <svg
                 class="text-[#788bf8]"
