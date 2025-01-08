@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div class="flex">
     <div
       :class="{
-        'min-h-screen bg-white border border-neutral-300  overflow-y-hidden overflow-x-clip transition-all duration-300': true,
+        ' min-h-screen bg-white border border-neutral-300  overflow-y-hidden overflow-x-clip transition-all duration-300': true,
         'w-[290px]': !miniVariant,
-        'w-[90px]': miniVariant,
+        'min-w-[90px]': miniVariant,
       }"
     >
       <!-- Navigation Drawer -->
@@ -335,13 +335,13 @@
           <div class="border border-neutral-200 mx-2"></div>
         </div>
       </div>
-
-      <!-- Main Content -->
-      <div class="flex-1">
-        <main class="pl-64">
-          <slot />
-        </main>
-      </div>
+    </div>
+    <!-- Main Content -->
+    <div class="flex-1">
+      <AppBar />
+      <main class="">
+        <slot />
+      </main>
     </div>
   </div>
 </template>
@@ -354,6 +354,7 @@ import {
   personalLinks,
   mainLinks,
 } from "@/utils/drawerLinks";
+import AppBar from "~/components/AppBar.vue";
 
 const route = useRoute();
 
