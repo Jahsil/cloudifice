@@ -3,7 +3,7 @@
     <div
       :class="{
         ' min-h-screen bg-white border border-neutral-300  overflow-y-hidden overflow-x-clip transition-all duration-300': true,
-        'w-[290px]': !miniVariant,
+        'min-w-[290px]': !miniVariant,
         'min-w-[90px]': miniVariant,
       }"
     >
