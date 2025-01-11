@@ -84,13 +84,81 @@
             </svg>
           </div>
           <div class="w-0 h-[40px] border border-neutral-300"></div>
-          <div class="rounded-full bg-primary w-8 h-8"></div>
+          <div class="relative">
+            <!-- Account Icon -->
+            <div
+              class="relative rounded-full bg-primary w-8 h-8 text-white flex justify-center items-center cursor-pointer"
+              @click="toggleDropdown"
+              ref="dropdownTrigger"
+            >
+              <span class="font-semibold text-lg">E</span>
+            </div>
+
+            <!-- Dropdown Menu -->
+            <div
+              v-if="isDropdownVisible"
+              class="absolute right-0 top-8 mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg"
+              ref="dropdownMenu"
+            >
+              <a
+                href="#"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >Item 1</a
+              >
+              <a
+                href="#"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >Item 2</a
+              >
+              <a
+                href="#"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >Item 3</a
+              >
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup>
+import { ref, onMounted, onUnmounted } from "vue";
 
-<style scoped></style>
+const isDropdownVisible = ref(false);
+
+const dropdownTrigger = ref(null);
+const dropdownMenu = ref(null);
+
+const toggleDropdown = () => {
+  isDropdownVisible.value = !isDropdownVisible.value;
+};
+
+const handleClickOutside = (event) => {
+  if (
+    dropdownTrigger.value &&
+    dropdownMenu.value &&
+    !dropdownTrigger.value.contains(event.target) &&
+    !dropdownMenu.value.contains(event.target)
+  ) {
+    isDropdownVisible.value = false;
+  }
+};
+
+onMounted(() => {
+  document.addEventListener("click", handleClickOutside);
+});
+
+onUnmounted(() => {
+  document.removeEventListener("click", handleClickOutside);
+});
+</script>
+
+<style scoped>
+.dropdown {
+  background: hsla(0, 65%, 57%, 0.779);
+  border: 1px solid #ddd;
+  padding: 10px;
+}
+</style>
