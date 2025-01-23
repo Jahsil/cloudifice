@@ -3,7 +3,7 @@ import axios from "axios";
 export default defineNuxtPlugin(() => {
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8000/api",
-    timeout: 10000,
+    // timeout: 10000,
   });
 
   // Add a request interceptor
