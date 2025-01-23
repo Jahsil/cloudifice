@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="show"
-    class="fixed bottom-5 right-5 z-50 flex items-center px-4 py-3 text-white bg-gray-800 rounded shadow-lg"
+    class="fixed top-5 right-5 z-50 flex items-center px-4 py-3 text-white bg-gray-800 rounded shadow-lg"
     :class="colorClass"
   >
     <span class="mr-3">{{ message }}</span>
