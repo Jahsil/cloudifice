@@ -706,7 +706,7 @@ const fetchFiles = async (folder) => {
     const response = await $fetch("http://localhost:8000/api/file/list", {
       method: "GET",
       query: {
-        path: folder,
+        path: encodeURIComponent(folder),
       },
       onResponse({ response }) {
         console.log("Status Code:", response.status);
