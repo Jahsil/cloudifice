@@ -182,9 +182,9 @@
             'hidden [#2f2f31]': miniVariant,
           }"
         >
-          Personal Files
+          Chat Hub
         </p>
-        <svg
+        <!-- <svg
           v-if="!miniVariant"
           class="ml-0 mr-3 text-[#788bf8]"
           xmlns="http://www.w3.org/2000/svg"
@@ -201,7 +201,7 @@
             d="M12 4v16m8-8H4"
             color="currentColor"
           />
-        </svg>
+        </svg> -->
       </div>
 
       <div class="flex-col mx-4">
@@ -242,9 +242,9 @@
       <!-- workspace file -->
       <div class="flex justify-between pt-4 mx-2">
         <p v-if="!miniVariant" class="text-[#2f2f31] text-base font-semibold">
-          Workspace Files
+          Shared Files
         </p>
-        <svg
+        <!-- <svg
           v-if="!miniVariant"
           class="ml-0 mr-3 text-[#788bf8]"
           xmlns="http://www.w3.org/2000/svg"
@@ -261,7 +261,7 @@
             d="M12 4v16m8-8H4"
             color="currentColor"
           />
-        </svg>
+        </svg> -->
       </div>
       <!-- workplace  -->
       <div class="flex-col mx-4">

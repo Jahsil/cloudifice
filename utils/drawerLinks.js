@@ -33,17 +33,19 @@ export const mainLinks = [
   },
   {
     id: 3,
-    name: "Notes",
+    name: "Insights",
     path: "/notes",
-    image: ` <path
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="1.5"
-                  d="M16 2v2m-5-2v2M6 2v2m13.5 6c0-3.3 0-4.95-1.025-5.975S15.8 3 12.5 3h-3C6.2 3 4.55 3 3.525 4.025S2.5 6.7 2.5 10v5c0 3.3 0 4.95 1.025 5.975S6.2 22 9.5 22h3m5-8v8m4-4h-8M7 15h4m-4-5h8"
-                  color="currentColor"
-                />`,
+    image: ` <g
+    fill="none"
+    stroke="currentColor"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="1.5"
+    color="currentColor"
+  >
+    <path d="M21 21H10c-3.3 0-4.95 0-5.975-1.025S3 17.3 3 14V3" />
+    <path d="M5 20c.44-3.156 2.676-11.236 5.428-11.236c1.902 0 2.395 3.871 4.258 3.871C17.893 12.635 17.428 4 21 4" />
+  </g>`,
   },
   {
     id: 4,
@@ -84,72 +86,66 @@ export const mainLinks = [
 export const personalLinks = [
   {
     id: 6,
-    name: "School Collections",
+    name: "Inbox",
     path: "/school-collections",
-    image: ` <path
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="1.5"
-                  d="M17.5 19v3m-11-3v3M4 10c0-3.771 0-5.657 1.172-6.828S8.229 2 12 2s5.657 0 6.828 1.172S20 6.229 20 10v3c0 2.828 0 4.243-.879 5.121C18.243 19 16.828 19 14 19h-4c-2.828 0-4.243 0-5.121-.879C4 17.243 4 15.828 4 13zm3 6h1m8 0h1M2 8v2m20-2v2M4.5 5h15m-15 8h15M12 13V5"
-                  color="currentColor"
-                />`,
+    image: ` <g
+    fill="none"
+    stroke="currentColor"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="1.5"
+    color="currentColor"
+  >
+    <path d="M2.5 12c0-4.478 0-6.718 1.391-8.109S7.521 2.5 12 2.5c4.478 0 6.718 0 8.109 1.391S21.5 7.521 21.5 12c0 4.478 0 6.718-1.391 8.109S16.479 21.5 12 21.5c-4.478 0-6.718 0-8.109-1.391S2.5 16.479 2.5 12" />
+    <path d="M21.5 13.5h-4.926c-.842 0-1.503.704-1.875 1.447c-.403.808-1.21 1.553-2.699 1.553s-2.296-.745-2.7-1.553c-.37-.743-1.032-1.447-1.874-1.447H2.5" />
+  </g>`,
   },
   {
     id: 7,
-    name: "Personal Collections",
+    name: "Group Chats",
     path: "/personal-collections",
-    image: ` <g
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="1.5"
-                  color="currentColor"
-                >
-                  <path
-                    d="M11.998 2C8.99 2 7.04 4.019 4.734 4.755c-.938.3-1.407.449-1.597.66c-.19.21-.245.519-.356 1.135c-1.19 6.596 1.41 12.694 7.61 15.068c.665.255.998.382 1.61.382s.946-.128 1.612-.383c6.199-2.373 8.796-8.471 7.606-15.067c-.111-.616-.167-.925-.357-1.136s-.658-.36-1.596-.659C16.959 4.019 15.006 2 11.998 2"
-                  />
-                  <path d="M9 13s1 0 2 2c0 0 3.177-5 6-6" />
-                </g>`,
+    image: ` <path
+    fill="none"
+    stroke="currentColor"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="1.5"
+    d="M14.17 20.89c4.184-.277 7.516-3.657 7.79-7.9c.053-.83.053-1.69 0-2.52c-.274-4.242-3.606-7.62-7.79-7.899a33 33 0 0 0-4.34 0c-4.184.278-7.516 3.657-7.79 7.9a20 20 0 0 0 0 2.52c.1 1.545.783 2.976 1.588 4.184c.467.845.159 1.9-.328 2.823c-.35.665-.526.997-.385 1.237c.14.24.455.248 1.084.263c1.245.03 2.084-.322 2.75-.813c.377-.279.566-.418.696-.434s.387.09.899.3c.46.19.995.307 1.485.34c1.425.094 2.914.094 4.342 0M11.995 12h.01m3.986 0H16m-8 0h.009"
+    color="currentColor"
+  />`,
   },
 ];
 
 export const workplaceLinks = [
   {
     id: 8,
-    name: "Telecom Collections",
+    name: "Received Files",
     path: "/telecom-collections",
-    image: ` <path
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="1.5"
-                  d="M18 14H6c-2.482 0-3 .518-3 3v2c0 2.482.518 3 3 3h12c2.482 0 3-.518 3-3v-2c0-2.482-.518-3-3-3M7 18h1m8 0h1M6 7V6c0-1.886 0-2.828.586-3.414S8.114 2 10 2h4c1.886 0 2.828 0 3.414.586S18 4.114 18 6v1c0 1.886 0 2.828-.586 3.414S15.886 11 14 11h-4c-1.886 0-2.828 0-3.414-.586S6 8.886 6 7m4.5 4l-.5 3m3.5-3l.5 3m-2 0v8"
-                  color="currentColor"
-                />`,
+    image: `   <g
+    fill="none"
+    stroke="currentColor"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="1.5"
+    color="currentColor"
+  >
+    <path d="M22 12.5c0-.491-.005-1.483-.016-1.976c-.065-3.065-.098-4.598-1.229-5.733c-1.131-1.136-2.705-1.175-5.854-1.254a115 115 0 0 0-5.802 0c-3.149.079-4.723.118-5.854 1.254c-1.131 1.135-1.164 2.668-1.23 5.733a69 69 0 0 0 0 2.952c.066 3.065.099 4.598 1.23 5.733c1.131 1.136 2.705 1.175 5.854 1.254q1.204.03 2.401.036" />
+    <path d="m2 6l6.913 3.925c2.526 1.433 3.648 1.433 6.174 0L22 6m-8 11.5h8m-8 0c0-.7 1.994-2.008 2.5-2.5M14 17.5c0 .7 1.994 2.009 2.5 2.5" />
+  </g>`,
   },
   {
     id: 9,
-    name: "Unicorn Collections",
+    name: "Public Files",
     path: "/unicorn-collections",
-    image: ` <g
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="1.5"
-                  color="currentColor"
-                >
-                  <path
-                    d="M2.5 12c0-4.478 0-6.718 1.391-8.109S7.521 2.5 12 2.5c4.478 0 6.718 0 8.109 1.391S21.5 7.521 21.5 12c0 4.478 0 6.718-1.391 8.109S16.479 21.5 12 21.5c-4.478 0-6.718 0-8.109-1.391S2.5 16.479 2.5 12"
-                  />
-                  <path
-                    d="m8 14.084l1.317 1.859c.29.41.436.615.56.543c.123-.072.123-.362.123-.942V7.5m6 2.416l-1.317-1.859c-.29-.41-.436-.615-.56-.543c-.123.072-.123.362-.123.942V16.5"
-                  />
-                </g>`,
+    image: `  <path
+    fill="none"
+    stroke="currentColor"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="1.5"
+    d="M13 7a4 4 0 1 1-8 0a4 4 0 0 1 8 0m2 4a4 4 0 0 0 0-8m-4 11H7a5 5 0 0 0-5 5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2a5 5 0 0 0-5-5m6 0a5 5 0 0 1 5 5a2 2 0 0 1-2 2h-1.5"
+    color="currentColor"
+  />`,
   },
 ];
 
