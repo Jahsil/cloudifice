@@ -248,6 +248,12 @@
       </div>
     </Modal>
     <div class="pl-8 pt-8">
+      <!-- header  -->
+      <div class="pb-4">
+        <p class="text-3xl tracking-wider text-neutral-800 font-semibold">
+          Computer
+        </p>
+      </div>
       <!-- breadcrums  -->
       <div class="flex justify-start items-center">
         <span
