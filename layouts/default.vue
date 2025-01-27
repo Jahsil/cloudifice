@@ -20,7 +20,7 @@
 
           <p
             v-if="!miniVariant"
-            class="text-xl font-semibold tracking-wider text-[#232326]"
+            class="text-xl font-semibold tracking-wider text-[#788bf8]"
           >
             Cloudifice
           </p>
