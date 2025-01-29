@@ -101,19 +101,10 @@
               ref="dropdownMenu"
             >
               <a
+                @click="logout"
                 href="#"
                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >Item 1</a
-              >
-              <a
-                href="#"
-                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >Item 2</a
-              >
-              <a
-                href="#"
-                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >Item 3</a
+                >Logout</a
               >
             </div>
           </div>
@@ -125,6 +116,11 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
+import { useAuthStore } from "@/stores/auth";
+import { useRouter } from "vue-router";
+
+const auth = useAuthStore();
+const router = useRouter();
 
 const isDropdownVisible = ref(false);
 
@@ -153,6 +149,15 @@ onMounted(() => {
 onUnmounted(() => {
   document.removeEventListener("click", handleClickOutside);
 });
+
+const logout = async () => {
+  try {
+    await auth.logout();
+    router.push("/login");
+  } catch (error) {
+    console.log("🚀 ~ logout ~ error:", error);
+  }
+};
 </script>
 
 <style scoped>
