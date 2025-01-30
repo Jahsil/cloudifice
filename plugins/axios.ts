@@ -1,8 +1,11 @@
 import axios from "axios";
 
 export default defineNuxtPlugin(() => {
+  const config = useRuntimeConfig();
+  const apiBase = config.public.apiBase;
+
   const axiosInstance = axios.create({
-    baseURL: "http://localhost:8000/api",
+    baseURL: `${apiBase}`,
     withCredentials: true,
     // timeout: 10000,
   });
