@@ -21,16 +21,16 @@ export const useAuthStore = defineStore("auth", {
 
   actions: {
     async login(email, password) {
+      const config = useRuntimeConfig();
+      const apiBase = config.public.apiBase;
+
       this.loading = true;
       this.error = null;
       try {
-        const response = await axios.post(
-          "http://localhost:8000/api/auth/login",
-          {
-            email,
-            password,
-          }
-        );
+        const response = await axios.post(`${apiBase}/auth/login`, {
+          email,
+          password,
+        });
         console.log("🚀 ~ login ~ response:", response);
 
         await this.getUser();
@@ -42,14 +42,13 @@ export const useAuthStore = defineStore("auth", {
     },
 
     async getUser() {
+      const config = useRuntimeConfig();
+      const apiBase = config.public.apiBase;
       try {
-        const response = await axios.get(
-          "http://localhost:8000/api/auth/user",
-          {
-            withCredentials: true,
-            credentials: true,
-          }
-        );
+        const response = await axios.get(`${apiBase}/auth/user`, {
+          withCredentials: true,
+          credentials: true,
+        });
 
         // const response = await $fetch("http://localhost:8000/api/auth/user", {
         //   method: "GET",
@@ -68,9 +67,11 @@ export const useAuthStore = defineStore("auth", {
     },
 
     async logout() {
+      const config = useRuntimeConfig();
+      const apiBase = config.public.apiBase;
       try {
         const response = await axios.post(
-          "http://localhost:8000/api/auth/logout",
+          `${apiBase}/auth/logout`,
           {},
           { withCredentials: true, credentials: true }
         );
