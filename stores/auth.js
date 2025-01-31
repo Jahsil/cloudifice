@@ -54,7 +54,9 @@ export const useAuthStore = defineStore("auth", {
       try {
         const response = await axios.get(`${apiBase}/auth/user`, {
           withCredentials: true,
-          credentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
         });
 
         // const response = await $fetch("http://localhost:8000/api/auth/user", {
