@@ -27,10 +27,17 @@ export const useAuthStore = defineStore("auth", {
       this.loading = true;
       this.error = null;
       try {
-        const response = await axios.post(`${apiBase}/auth/login`, {
-          email,
-          password,
-        });
+        const response = await axios.post(
+          `${apiBase}/auth/login`,
+          {
+            email,
+            password,
+          },
+          {
+            withCredentials: true,
+            credentials: true,
+          }
+        );
         console.log("🚀 ~ login ~ response:", response);
 
         await this.getUser();
