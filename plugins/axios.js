@@ -1,5 +1,7 @@
 import axios from "axios";
 
+axios.defaults.withCredentials = true;
+
 export default defineNuxtPlugin(() => {
   const config = useRuntimeConfig();
   const apiBase = config.public.apiBase;
@@ -7,6 +9,7 @@ export default defineNuxtPlugin(() => {
   const axiosInstance = axios.create({
     baseURL: `${apiBase}`,
     withCredentials: true,
+    credentials: true,
     // timeout: 10000,
   });
 
