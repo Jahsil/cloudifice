@@ -31,6 +31,7 @@ export default {
       },
       colors: {
         primary: "#788bf8",
+        btn: "#4A68F5",
         customGradientStart: "#dcd0ce", // Darker tone for #eee7e5
         customGradientMid1: "#d2cddc", // Darker tone for #e7e4ee
         customGradientMid2: "#c7d4d4", // Darker tone for #e1ecec

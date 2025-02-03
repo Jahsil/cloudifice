@@ -49,7 +49,7 @@
       </div>
       <div class="pr-3">
         <button
-          class="flex gap-2 text-sm bg-[#6274c7] rounded-md text-neutral-50 px-4 py-2"
+          class="flex gap-2 text-sm bg-[#4A68F5] rounded-md text-neutral-50 px-4 py-2"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
