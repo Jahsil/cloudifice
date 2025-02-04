@@ -546,6 +546,8 @@ const fileInput = ref(null);
 const inputFileName = ref("");
 const inputFileSize = ref("");
 
+const chunkSize = 1024 * 1024 * 50;
+
 function triggerFileUpload() {
   fileInput.value.click();
 }
@@ -561,6 +563,7 @@ function handleFileChange(event) {
 }
 
 function removeFile() {
+  fileInput.value = null;
   file.value = null;
 }
 const timeRemaining = computed(() => {
@@ -579,40 +582,59 @@ const uploadFile = async () => {
     return;
   }
 
-  const formData = new FormData();
-  formData.append("file", file.value);
-  formData.append("path", "/home/eyouel/Desktop");
+  const totalChunks = Math.ceil(file.value.size / chunkSize);
+  let uploadedBytesTotal = 0; // Track total uploaded bytes
 
   isUploading.value = true;
   uploadStartTime.value = Date.now();
+  let fileChunkIndex = 0;
 
+  // check if there is already a chunk
   try {
-    await $axios.post("file/upload", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      onUploadProgress: (progressEvent) => {
-        // Calculate upload percentage
-        uploadedBytes.value = progressEvent.loaded;
-        const percentCompleted = Math.round(
-          (progressEvent.loaded * 100) / progressEvent.total
-        );
-        progress.value = percentCompleted; // Update progress dynamically
-      },
+    const response = await $axios.post("file/check_chunk", {
+      fileName: file.value.name,
     });
-    // alert("File uploaded successfully!");
+    console.log("🚀 ~ uploadFile ~ response:", response);
+    fileChunkIndex = response.data.data;
   } catch (error) {
-    console.error("Upload failed:", error);
-    // alert("Failed to upload file.");
-  } finally {
-    isUploading.value = false;
-    progress.value = 0; // Reset progress bar after upload
+    console.log("🚀 ~ uploadFile ~ error:", error);
   }
-};
 
-// const handleFileChange = (event) => {
-//   file.value = event.target.files[0];
-// };
+  for (let index = fileChunkIndex; index < totalChunks; index++) {
+    const start = index * chunkSize;
+    const end = Math.min(start + chunkSize, file.value.size);
+    const chunk = file.value.slice(start, end);
+
+    const formData = new FormData();
+    formData.append("file", chunk);
+    formData.append("fileName", file.value.name);
+    formData.append("chunkIndex", index);
+    formData.append("totalChunks", totalChunks);
+    formData.append("path", paths.value.join("/"));
+
+    try {
+      await $axios.post("file/upload_file", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        onUploadProgress: (progressEvent) => {
+          uploadedBytesTotal += progressEvent.loaded; // Accumulate bytes uploaded
+          const percentCompleted = Math.round(
+            (uploadedBytesTotal / file.value.size) * 100
+          );
+          progress.value = percentCompleted; // Update progress dynamically
+        },
+      });
+    } catch (error) {
+      console.error("Upload failed:", error);
+      isUploading.value = false;
+      return;
+    }
+  }
+
+  isUploading.value = false;
+  alert("File uploaded successfully!");
+};
 
 const folderError = ref({
   name: "",
@@ -689,10 +711,10 @@ onMounted(async () => {
     await fetchFiles(paths.value.join("/"));
     loading.value = false;
   } else {
-    const query = { path: "eyouel" };
+    const query = { path: "/" };
     router.push({ query: query });
 
-    await fetchFiles("eyouel");
+    await fetchFiles("/");
     loading.value = false;
   }
 });
@@ -708,23 +730,34 @@ const goBack = async () => {
 };
 
 const fetchFiles = async (folder) => {
+  let folderPath = "";
+  if (folder && folder[0] === "/") {
+    folderPath = folder.slice(1, folder.length);
+  }
+  console.log("🚀 ~ fetchFiles ~ folderPath:", folderPath);
   try {
-    const response = await $fetch("http://localhost:8000/api/file/list", {
-      method: "GET",
-      query: {
-        path: encodeURIComponent(folder),
-      },
-      onResponse({ response }) {
-        console.log("Status Code:", response.status);
+    const response = await $axios.get("/file/list", {
+      params: {
+        path: encodeURIComponent(folderPath),
       },
     });
+    console.log("🚀 ~ fetchFiles ~ response:", response);
+    // const response = await $fetch("http://localhost:8000/api/file/list", {
+    //   method: "GET",
+    //   query: {
+    //     path: encodeURIComponent(folder),
+    //   },
+    //   onResponse({ response }) {
+    //     console.log("Status Code:", response.status);
+    //   },
+    // });
 
-    if (response.status === "OK") {
-      folders.value = response.result.map((item) => {
+    if (response.data.status === "OK") {
+      folders.value = response.data.result.map((item) => {
         return item.name;
       });
 
-      folderDetails.value = response.result;
+      folderDetails.value = response.data.result;
     }
   } catch (error) {
     console.log("🚀 ~ fetchFiles= ~ error:", error);
@@ -753,7 +786,7 @@ let folders = ref([]);
 
 let folderDetails = ref([]);
 
-let paths = ref(["eyouel"]);
+let paths = ref([""]);
 </script>
 
 <style scoped>
