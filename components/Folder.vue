@@ -17,7 +17,7 @@
         folder.type === 'file' &&
         imageFileTypes.includes(folder.name.split('.').at(-1))
       "
-      @click="handleFolderClick(folder)"
+      @click="handleFileClick(folder, 'image')"
       :style="{ width: size, height: size }"
       src="/public/image.png"
       alt="directory-image"
@@ -28,7 +28,7 @@
         folder.type === 'file' &&
         videoFileTypes.includes(folder.name.split('.').at(-1))
       "
-      @click="handleFolderClick(folder)"
+      @click="handleFileClick(folder, 'video')"
       :style="{ width: size, height: size }"
       src="/public/video.png"
       alt="directory-image"
@@ -39,7 +39,7 @@
         folder.type === 'file' &&
         documentFileTypes.includes(folder.name.split('.').at(-1))
       "
-      @click="handleFolderClick(folder)"
+      @click="handleFileClick(folder, 'document')"
       :style="{ width: size, height: size }"
       src="/public/file.png"
       alt="directory-image"
@@ -47,7 +47,7 @@
     />
     <img
       v-else
-      @click="handleFolderClick(folder)"
+      @click="handleFileClick(folder, 'other')"
       :style="{ width: size, height: size }"
       src="/public/directory.svg"
       alt="directory-image"
@@ -60,10 +60,13 @@
 </template>
 
 <script setup>
-const emit = defineEmits(["folder"]);
+const emit = defineEmits(["folder", "file"]);
 
 const handleFolderClick = (folder) => {
   emit("folder", folder);
+};
+const handleFileClick = (file, type) => {
+  emit("file", file, type);
 };
 const props = defineProps({
   folders: {

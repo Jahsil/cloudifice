@@ -351,7 +351,7 @@
           <input
             type="range"
             v-model="sliderValue"
-            class="h-1 bg-indigo-300 rounded-lg outline-none cursor-pointer accent-indigo-600"
+            class="h-1 bg-indigo-300 rounded-lg outline-none cursor-pointer accent-blue-600"
           />
 
           <svg
@@ -513,6 +513,7 @@
     <div v-if="!loading" class="flex flex-wrap gap-8 px-8 pt-8">
       <Folder
         @folder="handleFolderClickFromChild"
+        @file="handleFileClickFromChild"
         :size="slider"
         :folders="folderDetails"
       />
@@ -782,6 +783,9 @@ const handleFolderClickFromChild = async (folder) => {
   await fetchFiles(paths.value.join("/"));
   loading.value = false;
 };
+const handleFileClickFromChild = (file, type) => {
+  console.log("🚀 ~ handleFileClickFromChild ~ file:", file, "::::::", type);
+};
 let folders = ref([]);
 
 let folderDetails = ref([]);
@@ -793,8 +797,8 @@ let paths = ref([""]);
 .loader {
   height: 4px;
   width: 130px;
-  --c: no-repeat linear-gradient(#6100ee 0 0);
-  background: var(--c), var(--c), #d7b8fc;
+  --c: no-repeat linear-gradient(#4a68f5 0 0);
+  background: var(--c), var(--c), #bfc7e9;
   background-size: 60% 100%;
   animation: l16 3s infinite;
 }
