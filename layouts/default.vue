@@ -4,6 +4,7 @@
       :class="{
         ' min-h-screen bg-white border border-neutral-300  overflow-y-hidden overflow-x-clip transition-all duration-300': true,
         'min-w-[290px]': !miniVariant,
+        'max-w-[290px]': !miniVariant,
         'min-w-[90px]': miniVariant,
       }"
     >
@@ -102,9 +103,11 @@
             />
           </svg>
         </div>
-        <div class="flex-col">
-          <p class="text-[#232326] tracking-wide text-lg">Eyouel Haile</p>
-          <p>eyouel@eyouel.com</p>
+        <div v-if="auth" class="flex-col">
+          <p class="text-[#232326] tracking-wide text-lg">
+            {{ auth?.user["first_name"] }} {{ auth?.user["last_name"] }}
+          </p>
+          <p>{{ auth?.user["email"] }}</p>
         </div>
       </div>
 
@@ -346,7 +349,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref } from "vue";
 import {
   helpLinks,
@@ -355,6 +358,9 @@ import {
   mainLinks,
 } from "@/utils/drawerLinks";
 import AppBar from "~/components/AppBar.vue";
+import { useAuthStore } from "@/stores/auth";
+
+const auth = useAuthStore();
 
 const route = useRoute();
 
@@ -369,8 +375,7 @@ onMounted(() => {
   console.log("🚀 ~ route:", route.path, allLinks);
 
   const filteredLink = allLinks.find(
-    (item): item is { id: number; name: string; path: string; image: string } =>
-      !Array.isArray(item) && item.path === route.path
+    (item) => !Array.isArray(item) && item.path === route.path
   );
 
   if (filteredLink) {
@@ -385,15 +390,15 @@ const router = useRouter();
 const miniVariant = ref(false);
 let selectedItem = ref(1);
 
-function toogleDrawer(): void {
+function toogleDrawer() {
   miniVariant.value = !miniVariant.value;
 }
 
-function navigateToRoute(item: { path: string }) {
+function navigateToRoute(item) {
   router.push(item.path);
 }
 
-function selectLink(item: { id: number }) {
+function selectLink(item) {
   selectedItem.value = item.id;
   console.log("🚀 ~ selectLink ~ selectedItem:", selectedItem.value);
 }

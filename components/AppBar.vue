@@ -91,7 +91,9 @@
               @click="toggleDropdown"
               ref="dropdownTrigger"
             >
-              <span class="font-semibold text-lg">E</span>
+              <span class="font-semibold text-lg">{{
+                auth?.user["first_name"][0]
+              }}</span>
             </div>
 
             <!-- Dropdown Menu -->
