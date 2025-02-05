@@ -549,6 +549,9 @@ const inputFileSize = ref("");
 
 const chunkSize = 1024 * 1024 * 50;
 
+const downloadFileUrl = ref("");
+const viewFileUrl = ref("");
+
 function triggerFileUpload() {
   fileInput.value.click();
 }
@@ -784,7 +787,21 @@ const handleFolderClickFromChild = async (folder) => {
   loading.value = false;
 };
 const handleFileClickFromChild = (file, type) => {
-  console.log("🚀 ~ handleFileClickFromChild ~ file:", file, "::::::", type);
+  let filePath = paths.value.join("/");
+  filePath += "/";
+  filePath += file.name;
+  console.log("🚀 ~ handleFileClickFromChild ~ filePath:", filePath);
+
+  const baseUrl = "http://localhost:8000/view-file";
+  const encodedPath = encodeURIComponent(filePath);
+
+  if (type === "view") {
+    viewFileUrl.value = `${baseUrl}?path=${encodedPath}&action=view`;
+    window.open(viewFileUrl.value, "_blank");
+  } else {
+    viewFileUrl.value = `${baseUrl}?path=${encodedPath}&action=download`;
+    window.open(viewFileUrl.value, "_blank");
+  }
 };
 let folders = ref([]);
 
