@@ -33,9 +33,17 @@ export default defineNuxtPlugin(() => {
     }
   );
 
+  const axiosTest = axios.create({
+    baseURL: `http://localhost:8000`,
+    withCredentials: true,
+    credentials: true,
+    // timeout: 10000,
+  });
+
   return {
     provide: {
       axios: axiosInstance,
+      axiosTest: axiosTest,
     },
   };
 });
