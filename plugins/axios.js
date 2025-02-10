@@ -1,6 +1,6 @@
 import axios from "axios";
 
-axios.defaults.withCredentials = true;
+// axios.defaults.withCredentials = true;
 
 export default defineNuxtPlugin(() => {
   const config = useRuntimeConfig();
@@ -35,8 +35,8 @@ export default defineNuxtPlugin(() => {
 
   const axiosTest = axios.create({
     baseURL: `http://localhost:8000`,
-    withCredentials: true,
-    credentials: true,
+    // withCredentials: true,
+    // credentials: true,
     // timeout: 10000,
   });
 
