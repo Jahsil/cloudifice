@@ -51,13 +51,19 @@ export const useAuthStore = defineStore("auth", {
     async getUser() {
       const config = useRuntimeConfig();
       const apiBase = config.public.apiBase;
+
+      const token = useCookie("auth_token");
+      const decodedToken = decodeURIComponent(token.value);
+
       try {
         const response = await axios.get(`${apiBase}/auth/user`, {
-          withCredentials: true,
+          // withCredentials: true,
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${decodedToken}`,
           },
         });
+        console.log("🚀 ~ getUser ~ response:", response);
 
         // const response = await $fetch("http://localhost:8000/api/auth/user", {
         //   method: "GET",
@@ -69,7 +75,7 @@ export const useAuthStore = defineStore("auth", {
         if (response.status !== 200) {
           this.user = null;
         }
-        this.user = response.data.message;
+        this.user = response.data;
       } catch {
         this.user = null;
       }
