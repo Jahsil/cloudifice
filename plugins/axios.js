@@ -6,6 +6,12 @@ export default defineNuxtPlugin(() => {
   const config = useRuntimeConfig();
   const apiBase = config.public.apiBase;
 
+  const auth_token = useCookie("auth_token", {
+    secure: false, // Ensures it only works on HTTPS
+    httpOnly: false, // Since we need JavaScript access
+    sameSite: "lax",
+  });
+
   const axiosInstance = axios.create({
     baseURL: `${apiBase}`,
     withCredentials: true,
@@ -17,7 +23,7 @@ export default defineNuxtPlugin(() => {
   axiosInstance.interceptors.request.use(
     (config) => {
       // For example, add authorization token to headers
-      config.headers.Authorization = `Bearer ${localStorage.getItem("token")}`;
+      config.headers.Authorization = `Bearer ${auth_token.value}`;
       return config;
     },
     (error) => Promise.reject(error)
