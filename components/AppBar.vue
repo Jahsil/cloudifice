@@ -1,9 +1,11 @@
 <template>
-  <div>
+  <div class="relative">
     <div
-      class="sticky top-0 h-[66px] w-full border border-b-2 shadow-sm border-neutral-300"
+      class="top-0 right-0 h-[66px] w-full border shadow-sm border-orange-500"
     >
-      <div class="flex items-center justify-between pl-8 h-full">
+      <div
+        class="border-[3px] border-gray-500 flex items-center justify-between pl-8 h-full"
+      >
         <div>
           <input
             id="search"
@@ -15,7 +17,7 @@
           />
         </div>
         <!-- Menu icon -->
-        <div class="md:hidden pr-4">
+        <!-- <div class="md:hidden pr-4">
           <svg
             class="text-primary"
             xmlns="http://www.w3.org/2000/svg"
@@ -33,8 +35,11 @@
               color="currentColor"
             />
           </svg>
-        </div>
-        <div class="flex items-center gap-2 pr-4 xxs:hidden md:flex">
+        </div> -->
+        <div
+          class="z-50 border border-green-400 flex items-center gap-2 pr-4 xxs:hidden md:flex"
+        >
+          test
           <div>
             <svg
               class="text-[#788bf8]"
