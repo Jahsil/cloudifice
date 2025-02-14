@@ -2,7 +2,7 @@
   <div class="flex">
     <div
       :class="{
-        ' min-h-screen bg-white border border-neutral-300  overflow-y-hidden overflow-x-clip transition-all duration-300': true,
+        ' max-h-screen bg-white border border-gray-300  overflow-y-scroll scrollbar-hidden overflow-x-clip transition-all duration-300': true,
         'min-w-[290px]': !miniVariant,
         'max-w-[290px]': !miniVariant,
         'min-w-[90px]': miniVariant,
@@ -85,7 +85,17 @@
         class="flex space-x-2 border border-neutral-300 mt-4 rounded-lg py-2 mx-4"
       >
         <div>
+          <AccountImg
+            v-if="auth.profile_image"
+            :account-img="
+              auth.user.profile_image_url ? auth.user.profile_image_url : null
+            "
+            :show-status="false"
+            height="60px"
+            width="60px"
+          />
           <svg
+            v-else
             class="text-[#788bf8]"
             xmlns="http://www.w3.org/2000/svg"
             width="55"
@@ -107,7 +117,7 @@
           <p class="text-[#232326] tracking-wide text-lg">
             {{ auth?.user["first_name"] }} {{ auth?.user["last_name"] }}
           </p>
-          <p>{{ auth?.user["email"] }}</p>
+          <p class="text-sm text-neutral-500">{{ auth?.user["email"] }}</p>
         </div>
       </div>
 
@@ -339,9 +349,10 @@
         </div>
       </div>
     </div>
+
     <!-- Main Content -->
-    <div class="flex-1">
-      <AppBar />
+    <div class="max-h-screen flex-1">
+      <!-- <AppBar /> -->
       <main class="">
         <slot />
       </main>
