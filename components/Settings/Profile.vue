@@ -13,20 +13,55 @@
 
     <div class="py-8 flex items-center justify-between gap-4">
       <div class="flex items-center gap-4">
-        <div class="relative w-24 h-24 rounded-full bg-[#788bf8]">
+        <div
+          v-if="profileImage"
+          class="relative w-24 h-24 rounded-full bg-slate-200"
+        >
+          <img
+            :src="profileImage"
+            alt="Profile Image"
+            class="w-24 h-24 rounded-full object-cover"
+          />
+        </div>
+        <div
+          v-if="auth.user.profile_image_url && !profileImage"
+          class="relative w-24 h-24 rounded-full bg-slate-200"
+        >
+          <img
+            :src="auth.user.profile_image"
+            alt="Profile Image"
+            class="w-24 h-24 rounded-full object-cover"
+          />
+        </div>
+
+        <div
+          v-if="!auth.user.profile_image_url && !profileImage"
+          class="relative w-24 h-24 rounded-full bg-slate-200"
+        >
           <div class="absolute left-9 top-6">
-            <p class="text-5xl text-neutral-100">E</p>
+            <p class="text-5xl text-slate-500">E</p>
           </div>
         </div>
 
         <div class="flex flex-col gap-0">
           <p class="font-medium">Profile picture</p>
           <p class="text-sm text-[#6e7383]">PNG, JPEG under 15MB</p>
+          <div v-if="progress" class="mt-4 w-full">
+            <ProgressBar :amount="progress" />
+          </div>
         </div>
       </div>
 
+      <input
+        type="file"
+        ref="fileInput"
+        class="hidden"
+        @change="handleFileChange"
+      />
+
       <div class="flex gap-2">
         <button
+          @click="triggerFileUpload"
           class="border border-neutral-300 px-2 py-2 text-sm rounded-lg shadow-sm shadow-slate-200 font-medium tracking-tight"
         >
           Upload new picture
@@ -155,6 +190,81 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { ref } from "vue";
+const { $axios } = useNuxtApp();
+import { useAuthStore } from "@/stores/auth";
+
+const auth = useAuthStore();
+
+const fileInput = ref(null);
+const file = ref(null);
+const progress = ref(null);
+const token = ref(null);
+const profileImage = ref(null);
+
+const auth_token = useCookie("auth_token", {
+  secure: false, // Ensures it only works on HTTPS
+  httpOnly: false, // Since we need JavaScript access
+  sameSite: "lax",
+});
+
+token.value = auth_token.value;
+
+const triggerFileUpload = () => {
+  fileInput.value.click();
+};
+
+function removeFile() {
+  fileInput.value = null;
+  file.value = null;
+}
+
+const handleFileChange = async () => {
+  file.value = event.target.files[0];
+  console.log("🚀 ~ handleFileChange ~ file.value:", file.value);
+  if (file.value) {
+    await uploadProfilePhoto();
+
+    // Add file processing logic here
+  }
+};
+
+const uploadProfilePhoto = async () => {
+  if (!file.value) {
+    alert("Please select a file.");
+    return;
+  }
+
+  let uploadedBytesTotal = 0; // Track total uploaded bytes
+
+  try {
+    const formData = new FormData();
+    formData.append("profile_image", file.value);
+
+    const response = await $axios.post("file/upload-profile", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+      onUploadProgress: (progressEvent) => {
+        uploadedBytesTotal += progressEvent.loaded; // Accumulate bytes uploaded
+        const percentCompleted = Math.round(
+          (uploadedBytesTotal / file.value.size) * 100
+        );
+        progress.value = percentCompleted; // Update progress dynamically
+      },
+    });
+
+    profileImage.value = response.data.profile_image;
+  } catch (error) {
+    console.log("🚀 ~ uploadProfilePhoto ~ error:", error);
+  } finally {
+    progress.value = null;
+    fileInput.value = null;
+    file.value = null;
+  }
+};
+</script>
 
 <style lang="scss" scoped></style>
