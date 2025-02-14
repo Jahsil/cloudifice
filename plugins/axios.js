@@ -7,10 +7,11 @@ export default defineNuxtPlugin(() => {
   const apiBase = config.public.apiBase;
 
   const auth_token = useCookie("auth_token", {
-    secure: false, // Ensures it only works on HTTPS
+    secure: true, // Ensures it only works on HTTPS
     httpOnly: false, // Since we need JavaScript access
     sameSite: "lax",
   });
+  console.log("🚀 ~ defineNuxtPlugin ~ auth_token:", auth_token);
 
   const axiosInstance = axios.create({
     baseURL: `${apiBase}`,
@@ -24,6 +25,10 @@ export default defineNuxtPlugin(() => {
     (config) => {
       // For example, add authorization token to headers
       config.headers.Authorization = `Bearer ${auth_token.value}`;
+      console.log(
+        "🚀 ~ defineNuxtPlugin ~ config.headers.Authorization:",
+        config.headers.Authorization
+      );
       return config;
     },
     (error) => Promise.reject(error)
