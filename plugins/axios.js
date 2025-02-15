@@ -1,6 +1,7 @@
 import axios from "axios";
 
-// axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = true;
+axios.defaults.withXSRFToken = true;
 
 export default defineNuxtPlugin(() => {
   const config = useRuntimeConfig();
@@ -24,7 +25,7 @@ export default defineNuxtPlugin(() => {
   axiosInstance.interceptors.request.use(
     (config) => {
       // For example, add authorization token to headers
-      config.headers.Authorization = `Bearer ${auth_token.value}`;
+      // config.headers.Authorization = `Bearer ${auth_token.value}`;
       console.log(
         "🚀 ~ defineNuxtPlugin ~ config.headers.Authorization:",
         config.headers.Authorization

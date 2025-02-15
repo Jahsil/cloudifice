@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import axios from "axios";
 
 axios.defaults.withCredentials = true;
+axios.defaults.withXSRFToken = true;
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
@@ -54,10 +55,11 @@ export const useAuthStore = defineStore("auth", {
 
       const token = useCookie("auth_token");
       const decodedToken = decodeURIComponent(token.value);
+      console.log("🚀 ~ getUser ~ decodedToken:", decodedToken);
 
       try {
         const response = await axios.get(`${apiBase}/auth/user`, {
-          // withCredentials: true,
+          withCredentials: true,
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${decodedToken}`,
