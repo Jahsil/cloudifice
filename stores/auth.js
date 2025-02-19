@@ -28,6 +28,10 @@ export const useAuthStore = defineStore("auth", {
       this.loading = true;
       this.error = null;
       try {
+        await axios.get(`${apiBase}/sanctum/csrf-cookie`, {
+          withCredentials: true,
+          credentials: true,
+        });
         const response = await axios.post(
           `${apiBase}/auth/login`,
           {
@@ -39,8 +43,6 @@ export const useAuthStore = defineStore("auth", {
             credentials: true,
           }
         );
-        console.log("🚀 ~ login ~ response:", response);
-
         await this.getUser();
       } catch (err) {
         this.error = err.response?.data?.error || "Login failed";
@@ -55,25 +57,15 @@ export const useAuthStore = defineStore("auth", {
 
       const token = useCookie("auth_token");
       const decodedToken = decodeURIComponent(token.value);
-      console.log("🚀 ~ getUser ~ decodedToken:", decodedToken);
 
       try {
         const response = await axios.get(`${apiBase}/auth/user`, {
           withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${decodedToken}`,
-          },
+          // headers: {
+          //   "Content-Type": "application/json",
+          //   Authorization: `Bearer ${decodedToken}`,
+          // },
         });
-        console.log("🚀 ~ getUser ~ response:", response);
-
-        // const response = await $fetch("http://localhost:8000/api/auth/user", {
-        //   method: "GET",
-        //   credentials: "include",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        // });
         if (response.status !== 200) {
           this.user = null;
         }
