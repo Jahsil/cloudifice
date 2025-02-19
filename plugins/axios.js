@@ -6,6 +6,7 @@ axios.defaults.withXSRFToken = true;
 export default defineNuxtPlugin(() => {
   const config = useRuntimeConfig();
   const apiBase = config.public.apiBase;
+  const broadcastApiBase = config.public.brodcastApiBase;
 
   const auth_token = useCookie("auth_token", {
     secure: true, // Ensures it only works on HTTPS
@@ -46,9 +47,9 @@ export default defineNuxtPlugin(() => {
   );
 
   const axiosTest = axios.create({
-    baseURL: `http://localhost:8000`,
-    // withCredentials: true,
-    // credentials: true,
+    baseURL: `${broadcastApiBase}`,
+    withCredentials: true,
+    credentials: true,
     // timeout: 10000,
   });
 
