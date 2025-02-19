@@ -9,9 +9,10 @@ export default defineNuxtPlugin((_nuxtApp) => {
   const auth_token = useCookie("auth_token", {
     secure: false, // Ensures it only works on HTTPS
     httpOnly: false, // Since we need JavaScript access
-    sameSite: "strict",
+    sameSite: "lax",
   });
   token.value = decodeURIComponent(auth_token.value);
+  console.log("🚀 ~ defineNuxtPlugin ~ token.value:", auth_token.value);
 
   const config = useRuntimeConfig();
 
@@ -34,9 +35,9 @@ export default defineNuxtPlugin((_nuxtApp) => {
                 channel_name: channel.name,
               },
               {
-                headers: {
-                  Authorization: `Bearer ${token.value}`,
-                },
+                // headers: {
+                //   Authorization: `Bearer ${token.value}`,
+                // },
               }
             )
             .then((response) => {
