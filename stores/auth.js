@@ -24,6 +24,7 @@ export const useAuthStore = defineStore("auth", {
     async login(email, password) {
       const config = useRuntimeConfig();
       const apiBase = config.public.apiBase;
+      const brodcastApiBase = config.public.brodcastApiBase;
 
       this.loading = true;
       this.error = null;
