@@ -1,14 +1,17 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: false,
-  devServer: {
-    host: "localhost",
-    port: 3000,
-  },
+  // devServer: {
+  //   host: "0.0.0.0",
+  //   port: 3000,
+  // },
   runtimeConfig: {
     public: {
       apiBase:
-        process.env.NUXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api",
+        process.env.NUXT_PUBLIC_API_BASE_URL ||
+        process.env.NUXT_LOCAL_API_BASE_URL,
+      brodcastApiBase: process.env.NUXT_BROADCAST_API_BASE_URL,
+
       REVERB_APP_ID: process.env.NUXT_PUBLIC_REVERB_APP_ID,
       REVERB_APP_KEY: process.env.NUXT_PUBLIC_REVERB_APP_KEY,
       REVERB_APP_SECRET: process.env.NUXT_PUBLIC_REVERB_APP_SECRET,
