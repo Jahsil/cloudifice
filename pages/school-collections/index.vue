@@ -607,7 +607,7 @@ const sendMessage = async () => {
 
     formData["message"] = inputMessage.value;
     formData["group_id"] = null;
-    formData["receiver_id"] = 6;
+    formData["receiver_id"] = selectedUser.value.id;
 
     const response = await $axios.post("chat/send-message", formData, {
       headers: {
