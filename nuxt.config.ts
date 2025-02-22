@@ -20,9 +20,9 @@ export default defineNuxtConfig({
         process.env.NUXT_PUBLIC_REVERB_APP_SECRET ||
         process.env.REVERB_APP_SECRET,
       REVERB_HOST:
-        process.env.NUXT_PUBLIC_REVERB_HOST || process.env.REVERB_SERVER_HOST,
+        process.env.NUXT_PUBLIC_REVERB_HOST || process.env.REVERB_HOST,
       REVERB_PORT:
-        process.env.NUXT_PUBLIC_REVERB_PORT || process.env.REVERB_SERVER_PORT,
+        process.env.NUXT_PUBLIC_REVERB_PORT || process.env.REVERB_PORT,
       REVERB_SCHEME:
         process.env.NUXT_PUBLIC_REVERB_SCHEME || process.env.REVERB_SCHEME,
     },
