@@ -24,6 +24,7 @@ export default defineNuxtPlugin((_nuxtApp) => {
     wssPort: config.public.REVERB_PORT ?? 443,
     forceTLS: (config.public.REVERB_SCHEME ?? "https") === "https",
     enabledTransports: ["ws", "wss"],
+    wsPath: "/reverb",
     authorizer: (channel, options) => {
       return {
         authorize: (socketId, callback) => {
