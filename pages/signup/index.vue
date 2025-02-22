@@ -441,7 +441,7 @@ async function handleSubmit() {
       formData["password"] = signUpForm.value.password;
 
       const response = await $axios.post("auth/register", formData);
-      if (response.data.status === "OK") {
+      if (response.status == 201 || response.status == 200) {
         userAdded.value = true;
         username.value = signUpForm.value.firstName;
       }
