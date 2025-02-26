@@ -810,7 +810,7 @@ let folderDetails = ref([]);
 let paths = ref([""]);
 </script>
 
-<style scoped>
+<style>
 .loader {
   height: 4px;
   width: 130px;
