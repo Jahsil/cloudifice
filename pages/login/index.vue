@@ -24,7 +24,7 @@
           <img class="h-4 w-4" src="/public/google.png" alt="google-logo" />
           <p>Continue with Google</p>
         </div>
-        <form @submit.prevent="handleSubmit">
+        <form @submit.prevent="handleLoginClick">
           <!-- Email  -->
           <div class="mx-8 flex flex-col pt-7">
             <label class="text-sm" for="email">Email</label>
@@ -64,10 +64,10 @@
             </span>
           </div>
           <div
-            v-if="auth.isError"
+            v-if="auth.isError && auth.isError.message"
             class="mx-8 pt-4 flex justify-center text-red-500"
           >
-            {{ auth.isError }}
+            {{ auth.isError.message ? auth.isError.message[0] : auth.isError }}
           </div>
 
           <!-- Submit Button  -->
@@ -113,7 +113,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref } from "vue";
 import { useNuxtApp } from "#app";
 import { useAuthStore } from "@/stores/auth";
@@ -127,27 +127,44 @@ definePageMeta({
   layout: false,
 });
 
-interface FormData {
-  email: string;
-  password: string;
+// Throttle function
+function throttle(func, limit) {
+  let inThrottle = false;
+  return async (...args) => {
+    if (!inThrottle) {
+      inThrottle = true;
+      await func(...args);
+      setTimeout(() => {
+        inThrottle = false;
+      }, limit);
+    }
+  };
 }
 
-interface FormError {
-  email: string;
-  password: string;
-}
+// Login function
+const handleLoginClick = throttle(handleSubmit, 3000);
 
-const signInForm = ref<FormData>({
+// interface FormData {
+//   email: string;
+//   password: string;
+// }
+
+// interface FormError {
+//   email: string;
+//   password: string;
+// }
+
+const signInForm = ref({
   email: "",
   password: "",
 });
 
-const errors = ref<FormError>({
+const errors = ref({
   email: "",
   password: "",
 });
 
-function validateForm(): boolean {
+function validateForm() {
   let isValid = true;
 
   // Email Validation
@@ -182,7 +199,6 @@ async function handleSubmit() {
       if (auth.user) {
         router.push("/home");
       }
-      console.log("🚀 ~ handleSubmit ~ response:", auth);
     } catch (error) {
       console.log("🚀 ~ handleSubmit ~ error:", error);
       errors.value.email = auth.isError || "";
