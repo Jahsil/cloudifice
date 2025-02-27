@@ -256,6 +256,9 @@
       </div>
       <!-- breadcrums  -->
       <div class="flex justify-start items-center">
+        <span class="text-xl tracking-tight font-medium">{{
+          auth.user.username
+        }}</span>
         <span
           v-for="(item, index) in paths"
           :key="index"
@@ -527,8 +530,10 @@
 <script setup>
 import { ref } from "vue";
 import Modal from "~/components/Modal.vue";
+import { useAuthStore } from "@/stores/auth";
 
 const { $axios } = useNuxtApp();
+const auth = useAuthStore();
 
 const route = useRoute();
 const router = useRouter();
@@ -676,7 +681,7 @@ async function createFolder() {
         {},
         {
           params: {
-            path: newPath.join("/"),
+            path: paths.value.length > 1 ? newPath.join("/") : "root",
             name: folderPayload.value.name,
           },
         }
