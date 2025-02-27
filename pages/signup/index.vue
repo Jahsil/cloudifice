@@ -299,7 +299,7 @@ import { ref } from "vue";
 import { useNuxtApp } from "#app";
 import { useRouter } from "vue-router";
 
-const { $axios } = useNuxtApp();
+const { $axios, $axiosTest } = useNuxtApp();
 const router = useRouter();
 
 definePageMeta({
@@ -497,6 +497,11 @@ async function signUp() {
       formData["phone"] = signUpForm.value.phone;
       formData["email"] = signUpForm.value.email;
       formData["password"] = signUpForm.value.password;
+
+      await $axiosTest.get(`sanctum/csrf-cookie`, {
+        withCredentials: true,
+        credentials: true,
+      });
 
       const response = await $axios.post("auth/register", formData);
       if (response.status == 201 || response.status == 200) {
