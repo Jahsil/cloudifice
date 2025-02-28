@@ -1,8 +1,8 @@
 <template>
-  <div class="flex">
+  <div class="flex h-screen max-w-[100vw]">
     <div
       :class="{
-        ' max-h-screen bg-white border border-gray-300  overflow-y-scroll scrollbar-hidden overflow-x-clip transition-all duration-300': true,
+        ' max-h-screen bg-white border border-gray-300  scrollbar-hidden overflow-x-clip transition-all duration-300': true,
         'min-w-[290px]': !miniVariant,
         'max-w-[290px]': !miniVariant,
         'min-w-[90px]': miniVariant,
@@ -253,31 +253,14 @@
       </div>
 
       <!-- workspace file -->
-      <div class="flex justify-between pt-4 mx-2">
+      <!-- <div class="flex justify-between pt-4 mx-2">
         <p v-if="!miniVariant" class="text-[#2f2f31] text-base font-semibold">
           Shared Files
         </p>
-        <!-- <svg
-          v-if="!miniVariant"
-          class="ml-0 mr-3 text-[#788bf8]"
-          xmlns="http://www.w3.org/2000/svg"
-          width="17"
-          height="17"
-          viewBox="0 0 24 24"
-        >
-          <path
-            fill="none"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="1.5"
-            d="M12 4v16m8-8H4"
-            color="currentColor"
-          />
-        </svg> -->
-      </div>
+        
+      </div> -->
       <!-- workplace  -->
-      <div class="flex-col mx-4">
+      <!-- <div class="flex-col mx-4">
         <nav>
           <ul class="py-3">
             <li
@@ -310,7 +293,7 @@
           </ul>
         </nav>
         <div class="border border-neutral-200 mx-2"></div>
-      </div>
+      </div> -->
 
       <div class="mt-4">
         <div class="flex-col mx-4">
@@ -351,9 +334,11 @@
     </div>
 
     <!-- Main Content -->
-    <div class="max-h-screen flex-1">
-      <!-- <AppBar /> -->
-      <main class="">
+    <div class="flex flex-col flex-1">
+      <AppBar />
+      <!-- Fixed App Bar -->
+
+      <main class="flex-1 overflow-auto mt-1 p-4">
         <slot />
       </main>
     </div>
@@ -370,8 +355,11 @@ import {
 } from "@/utils/drawerLinks";
 import AppBar from "~/components/AppBar.vue";
 import { useAuthStore } from "@/stores/auth";
+import { useUIStore } from "@/stores/ui";
 
 const auth = useAuthStore();
+const ui = useUIStore();
+console.log("🚀 ~ ui:", ui.navMode);
 
 const route = useRoute();
 
