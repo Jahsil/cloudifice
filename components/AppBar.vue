@@ -1,147 +1,159 @@
 <template>
-  <!-- <div class="relative"> -->
-  <div class="top-0 right-0 h-[66px] w-full border shadow-sm">
-    <div class="flex items-center justify-between pl-4 h-full">
-      <div class="flex items-center gap-2">
-        <!-- menu icon here  -->
-        <svg
-          class="text-primary"
-          xmlns="http://www.w3.org/2000/svg"
-          width="25"
-          height="25"
-          viewBox="0 0 24 24"
+  <header
+    class="sticky top-0 z-40 h-16 w-full bg-white border-b border-gray-200 shadow-sm"
+  >
+    <div class="flex items-center justify-between h-full px-4">
+      <!-- Left Section -->
+      <div class="flex items-center gap-4">
+        <!-- Mobile Menu Button (only visible on mobile) -->
+        <button
+          @click="$emit('toggle-drawer')"
+          class="p-1 text-gray-600 rounded-md md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          <path
-            fill="none"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="1.5"
-            d="M4 4.5h16m-16 10h16m-16-5h16m-16 10h16"
-            color="currentColor"
-          />
-        </svg>
-        <input
-          id="search"
-          type="text"
-          placeholder="Search for documents & files"
-          :class="{
-            'w-64 pl-4 py-2  rounded-md  text-sm placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 border border-neutral-300 focus:outline-none shadow-sm transition-all duration-200': true,
-          }"
-        />
-      </div>
-      <!-- Menu icon -->
-      <div class="md:hidden pr-4">
-        <svg
-          class="text-primary"
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-        >
-          <path
-            fill="none"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="1.5"
-            d="M4 5h16m-2 7H6m2 7h8"
-            color="currentColor"
-          />
-        </svg>
-      </div>
-      <div class="z-50 flex items-center gap-2 pr-4 xxs:hidden md:flex">
-        <div>
           <svg
-            class="text-[#788bf8]"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
             viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
           >
-            <g
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+
+        <!-- Search Bar -->
+        <div class="relative hidden md:block">
+          <div
+            class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+          >
+            <svg
+              class="w-5 h-5 text-gray-400"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </div>
+          <input
+            type="text"
+            placeholder="Search for documents & files"
+            class="w-64 pl-10 pr-4 py-2 text-sm text-gray-700 placeholder-gray-400 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white transition-all duration-200"
+          />
+        </div>
+      </div>
+
+      <!-- Right Section -->
+      <div class="flex items-center gap-4">
+        <!-- Icons (hidden on mobile) -->
+        <div class="hidden md:flex items-center gap-4">
+          <button class="p-1 text-gray-600 rounded-full hover:bg-gray-100">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
+              stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
-              stroke-width="1.5"
-              color="currentColor"
             >
               <circle cx="12" cy="12" r="10" />
-              <path
-                d="M10 9a2 2 0 1 1 3.683 1.08C13.085 11.01 12 11.896 12 13v.5m-.008 3.5h.009"
-              />
-            </g>
-          </svg>
-        </div>
-        <div>
-          <svg
-            class="text-[#788bf8]"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <g
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+          </button>
+
+          <button class="p-1 text-gray-600 rounded-full hover:bg-gray-100">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
+              stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
-              stroke-width="1.5"
-              color="currentColor"
             >
-              <path
-                d="M5.158 11.491c-.073 1.396.011 2.882-1.236 3.817A2.3 2.3 0 0 0 3 17.153C3 18.15 3.782 19 4.8 19h14.4c1.018 0 1.8-.85 1.8-1.847c0-.726-.342-1.41-.922-1.845c-1.247-.935-1.163-2.421-1.236-3.817a6.851 6.851 0 0 0-13.684 0"
-              />
-              <path
-                d="M10.5 3.125C10.5 3.953 11.172 5 12 5s1.5-1.047 1.5-1.875S12.828 2 12 2s-1.5.297-1.5 1.125M15 19a3 3 0 1 1-6 0"
-              />
-            </g>
-          </svg>
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+            </svg>
+          </button>
+
+          <div class="w-px h-6 bg-gray-300"></div>
         </div>
-        <div class="w-0 h-[40px] border border-neutral-300"></div>
+
+        <!-- User Profile Dropdown -->
         <div class="relative">
-          <!-- Account Icon -->
-          <div
-            class="relative rounded-full bg-primary w-8 h-8 text-white flex justify-center items-center cursor-pointer"
+          <button
             @click="toggleDropdown"
+            class="flex items-center gap-2 focus:outline-none"
             ref="dropdownTrigger"
           >
-            <span class="font-semibold text-lg">{{
-              auth?.user["first_name"][0]
-            }}</span>
-          </div>
+            <div
+              class="flex items-center justify-center w-8 h-8 rounded-full bg-[#788bf8] text-white font-medium"
+            >
+              {{ auth?.user['first_name']?.[0] || 'U' }}
+            </div>
+            <span
+              class="hidden text-sm font-medium text-gray-700 md:inline-block"
+            >
+              {{ auth?.user['first_name'] }} {{ auth?.user['last_name'] }}
+            </span>
+          </button>
 
           <!-- Dropdown Menu -->
-          <div
-            v-if="isDropdownVisible"
-            class="absolute right-0 top-8 mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg"
-            ref="dropdownMenu"
+          <transition
+            enter-active-class="transition duration-100 ease-out"
+            enter-from-class="transform scale-95 opacity-0"
+            enter-to-class="transform scale-100 opacity-100"
+            leave-active-class="transition duration-75 ease-in"
+            leave-from-class="transform scale-100 opacity-100"
+            leave-to-class="transform scale-95 opacity-0"
           >
-            <a
-              @click="logout"
-              href="#"
-              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-              >Logout</a
+            <div
+              v-if="isDropdownVisible"
+              class="absolute right-0 z-50 w-48 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+              ref="dropdownMenu"
             >
-          </div>
+              <div class="py-1">
+                <a
+                  href="#"
+                  @click.prevent="logout"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  Logout
+                </a>
+              </div>
+            </div>
+          </transition>
         </div>
       </div>
     </div>
-  </div>
-  <!-- </div> -->
+  </header>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
-import { useAuthStore } from "@/stores/auth";
-import { useRouter } from "vue-router";
+import { ref, onMounted, onUnmounted } from 'vue';
+import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'vue-router';
 
 const auth = useAuthStore();
 const router = useRouter();
 
 const isDropdownVisible = ref(false);
-
 const dropdownTrigger = ref(null);
 const dropdownMenu = ref(null);
 
@@ -161,27 +173,33 @@ const handleClickOutside = (event) => {
 };
 
 onMounted(() => {
-  document.addEventListener("click", handleClickOutside);
+  document.addEventListener('click', handleClickOutside);
 });
 
 onUnmounted(() => {
-  document.removeEventListener("click", handleClickOutside);
+  document.removeEventListener('click', handleClickOutside);
 });
 
 const logout = async () => {
   try {
     await auth.logout();
-    router.push("/login");
+    router.push('/login');
   } catch (error) {
-    console.log("🚀 ~ logout ~ error:", error);
+    console.error('Logout error:', error);
   }
 };
 </script>
 
 <style scoped>
-.dropdown {
-  background: hsla(0, 65%, 57%, 0.779);
-  border: 1px solid #ddd;
-  padding: 10px;
+/* Smooth transitions for dropdown */
+.dropdown-enter-active,
+.dropdown-leave-active {
+  transition: all 0.2s ease;
+}
+
+.dropdown-enter-from,
+.dropdown-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
 }
 </style>

@@ -179,8 +179,8 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import Modal from "~/components/Modal.vue";
+import { ref } from 'vue';
+import Modal from '~/components/Modal.vue';
 
 const { $axios } = useNuxtApp();
 
@@ -198,8 +198,8 @@ const uploadStartTime = ref(0);
 const uploadedBytes = ref(0);
 
 const fileInput = ref(null);
-const inputFileName = ref("");
-const inputFileSize = ref("");
+const inputFileName = ref('');
+const inputFileSize = ref('');
 
 const chunkSize = 1024 * 1024 * 50;
 
@@ -233,7 +233,7 @@ const timeRemaining = computed(() => {
 
 const uploadFile = async () => {
   if (!file.value) {
-    alert("Please select a file.");
+    alert('Please select a file.');
     return;
   }
 
@@ -246,13 +246,13 @@ const uploadFile = async () => {
 
   // check if there is already a chunk
   try {
-    const response = await $axios.post("file/check_chunk", {
+    const response = await $axios.post('file/check_chunk', {
       fileName: file.value.name,
     });
-    console.log("🚀 ~ uploadFile ~ response:", response);
+    console.log('🚀 ~ uploadFile ~ response:', response);
     fileChunkIndex = response.data.data;
   } catch (error) {
-    console.log("🚀 ~ uploadFile ~ error:", error);
+    console.log('🚀 ~ uploadFile ~ error:', error);
   }
 
   for (let index = fileChunkIndex; index < totalChunks; index++) {
@@ -261,42 +261,42 @@ const uploadFile = async () => {
     const chunk = file.value.slice(start, end);
 
     const formData = new FormData();
-    formData.append("file", chunk);
-    formData.append("fileName", file.value.name);
-    formData.append("chunkIndex", index);
-    formData.append("totalChunks", totalChunks);
-    formData.append("path", paths.value.join("/"));
+    formData.append('file', chunk);
+    formData.append('fileName', file.value.name);
+    formData.append('chunkIndex', index);
+    formData.append('totalChunks', totalChunks);
+    formData.append('path', paths.value.join('/'));
 
     try {
-      await $axios.post("file/upload_file", formData, {
+      await $axios.post('file/upload_file', formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          'Content-Type': 'multipart/form-data',
         },
         onUploadProgress: (progressEvent) => {
           uploadedBytesTotal += progressEvent.loaded; // Accumulate bytes uploaded
           const percentCompleted = Math.round(
-            (uploadedBytesTotal / file.value.size) * 100
+            (uploadedBytesTotal / file.value.size) * 100,
           );
           progress.value = percentCompleted; // Update progress dynamically
         },
       });
     } catch (error) {
-      console.error("Upload failed:", error);
+      console.error('Upload failed:', error);
       isUploading.value = false;
       return;
     }
   }
 
   isUploading.value = false;
-  alert("File uploaded successfully!");
+  alert('File uploaded successfully!');
 };
 
 const folderError = ref({
-  name: "",
+  name: '',
 });
 
 const folderPayload = ref({
-  name: "",
+  name: '',
 });
 
 function validateForm() {
@@ -304,14 +304,14 @@ function validateForm() {
 
   // Name Validation
   if (!folderPayload.value.name) {
-    folderError.value.name = "Folder name is required.";
+    folderError.value.name = 'Folder name is required.';
     isValid = false;
   } else if (!/^[A-Za-z]{1,50}$/.test(folderPayload.value.name)) {
     folderError.value.name =
-      "First name must be up to 50 characters, letters only (A-Z or a-z).";
+      'First name must be up to 50 characters, letters only (A-Z or a-z).';
     isValid = false;
   } else {
-    folderError.value.name = "";
+    folderError.value.name = '';
   }
   return isValid;
 }
@@ -323,22 +323,22 @@ async function createFolder() {
     // console.log("CREATE :::", newPath.join("/"), ":::", folderPayload.value);
     if (validateForm()) {
       const response = await $axios.post(
-        "file/create-folder",
+        'file/create-folder',
         {},
         {
           params: {
-            path: newPath.join("/"),
+            path: newPath.join('/'),
             name: folderPayload.value.name,
           },
-        }
+        },
       );
-      console.log("🚀 ~ createFolder ~ response:", response);
-      if (response.data.status === "OK") {
+      console.log('🚀 ~ createFolder ~ response:', response);
+      if (response.data.status === 'OK') {
       }
       showModal.value = false;
     }
   } catch (error) {
-    console.log("🚀 ~ createFolder ~ error:", error);
+    console.log('🚀 ~ createFolder ~ error:', error);
     showModal.value = false;
   }
 }
@@ -346,30 +346,30 @@ async function createFolder() {
 async function refresh() {
   try {
     loading.value = true;
-    await fetchFiles(paths.value.join("/"));
+    await fetchFiles(paths.value.join('/'));
     loading.value = false;
   } catch (error) {
-    console.log("🚀 ~ refresh ~ error:", error);
+    console.log('🚀 ~ refresh ~ error:', error);
     loading.value = false;
   }
 }
 
 const sliderValue = ref(35);
 const slider = computed(() => {
-  return (sliderValue.value * 2.4).toString() + "px";
+  return (sliderValue.value * 2.4).toString() + 'px';
 });
 
 onMounted(async () => {
   loading.value = true;
   if (route.query.path) {
-    paths.value = route.query.path.split("/");
-    await fetchFiles(paths.value.join("/"));
+    paths.value = route.query.path.split('/');
+    await fetchFiles(paths.value.join('/'));
     loading.value = false;
   } else {
-    const query = { path: "/" };
+    const query = { path: '/' };
     router.push({ query: query });
 
-    await fetchFiles("/");
+    await fetchFiles('/');
     loading.value = false;
   }
 });
@@ -378,25 +378,25 @@ const goBack = async () => {
   loading.value = true;
 
   paths.value.pop();
-  const newQuery = { path: paths.value.join("/") };
+  const newQuery = { path: paths.value.join('/') };
   router.push({ query: newQuery });
-  await fetchFiles(paths.value.join("/"));
+  await fetchFiles(paths.value.join('/'));
   loading.value = false;
 };
 
 const fetchFiles = async (folder) => {
-  let folderPath = "";
-  if (folder && folder[0] === "/") {
+  let folderPath = '';
+  if (folder && folder[0] === '/') {
     folderPath = folder.slice(1, folder.length);
   }
-  console.log("🚀 ~ fetchFiles ~ folderPath:", folderPath);
+  console.log('🚀 ~ fetchFiles ~ folderPath:', folderPath);
   try {
-    const response = await $axios.get("/file/list-archive", {
+    const response = await $axios.get('/file/list-archive', {
       params: {
         path: encodeURIComponent(folderPath),
       },
     });
-    console.log("🚀 ~ fetchFiles ~ response:", response);
+    console.log('🚀 ~ fetchFiles ~ response:', response);
     // const response = await $fetch("http://localhost:8000/api/file/list", {
     //   method: "GET",
     //   query: {
@@ -407,7 +407,7 @@ const fetchFiles = async (folder) => {
     //   },
     // });
 
-    if (response.data.status === "OK") {
+    if (response.data.status === 'OK') {
       folders.value = response.data.result.map((item) => {
         return item.name;
       });
@@ -415,13 +415,13 @@ const fetchFiles = async (folder) => {
       folderDetails.value = response.data.result;
     }
   } catch (error) {
-    console.log("🚀 ~ fetchFiles= ~ error:", error);
+    console.log('🚀 ~ fetchFiles= ~ error:', error);
     if (error.response) {
       // console.error("Error Status Code:", error.response.status);
       // console.error("Error Headers:", error.response.headers);
       // console.error("Error Data:", error.response._data);
     } else {
-      console.error("Unexpected Error:", error);
+      console.error('Unexpected Error:', error);
     }
   }
 };
@@ -431,20 +431,20 @@ const handleFolderClickFromChild = async (folder) => {
 
   paths.value.push(folder.name);
 
-  const query = { path: paths.value.join("/") };
+  const query = { path: paths.value.join('/') };
   router.push({ query: query });
 
-  await fetchFiles(paths.value.join("/"));
+  await fetchFiles(paths.value.join('/'));
   loading.value = false;
 };
 const handleFileClickFromChild = (file, type) => {
-  console.log("🚀 ~ handleFileClickFromChild ~ file:", file, "::::::", type);
+  console.log('🚀 ~ handleFileClickFromChild ~ file:', file, '::::::', type);
 };
 let folders = ref([]);
 
 let folderDetails = ref([]);
 
-let paths = ref([""]);
+let paths = ref(['']);
 </script>
 
 <style scoped>
