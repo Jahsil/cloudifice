@@ -36,12 +36,14 @@
 
     <!-- Progress Bar -->
     <div v-if="amount" class="mt-4 space-y-2">
-      <div class="w-full h-2 rounded-full bg-neutral-100 overflow-hidden">
+      <div
+        class="w-full h-2 rounded-full bg-neutral-100 overflow-hidden progress-bar"
+      >
         <div
-          class="h-full rounded-full transition-all duration-500 ease-out"
+          class="h-full rounded-full transition-all duration-500 ease-out progress-bar-inner"
           :style="{
             backgroundColor: progressBarFg,
-            width: `${amount}%`,
+            '--progress-amount': `${amount}%`,
           }"
         ></div>
       </div>
@@ -99,3 +101,21 @@ defineProps({
   },
 });
 </script>
+
+<style scoped>
+.progress-bar {
+}
+
+@keyframes fill-bar {
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--progress-amount);
+  }
+}
+
+.progress-bar-inner {
+  animation: fill-bar 1.5s ease-out forwards;
+}
+</style>
