@@ -205,7 +205,7 @@
             </div>
           </div>
           <!-- progress bar  -->
-          <div v-if="progress" class="mt-4">
+          <div v-if="progress" class="mt-4 w-full">
             <ProgressBar :amount="progress" />
           </div>
         </div>
@@ -304,7 +304,7 @@
         <!-- Left Controls -->
         <div class="flex items-center space-x-4">
           <button
-            :disabled="paths.length === 1"
+            :disabled="paths.length === 0"
             @click="goBack"
             class="p-2 rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
             aria-label="Go back"
@@ -503,6 +503,7 @@
         <Folder
           @folder="handleFolderClickFromChild"
           @file="handleFileClickFromChild"
+          @deleteFolder="handleDeleteRequestFromChild"
           :size="slider"
           :folders="folderDetails"
         />
@@ -621,7 +622,10 @@ const uploadFile = async () => {
     formData.append('fileName', file.value.name);
     formData.append('chunkIndex', index);
     formData.append('totalChunks', totalChunks);
-    formData.append('path', paths.value.join('/'));
+    formData.append(
+      'path',
+      paths.value.length > 0 ? paths.value.join('/') : 'root',
+    );
 
     try {
       await $axios.post('file/upload_file', formData, {
@@ -639,11 +643,15 @@ const uploadFile = async () => {
     } catch (error) {
       console.error('Upload failed:', error);
       isUploading.value = false;
+      progress.value = 0;
+      file.value = null;
       return;
     }
   }
 
   isUploading.value = false;
+  progress.value = 0;
+  file.value = null;
   alert('File uploaded successfully!');
 };
 
@@ -675,15 +683,13 @@ function validateForm() {
 async function createFolder() {
   try {
     let newPath = [...paths.value];
-    let path = newPath.shift();
-    // console.log("CREATE :::", newPath.join("/"), ":::", folderPayload.value);
     if (validateForm()) {
       const response = await $axios.post(
         'file/create-folder',
         {},
         {
           params: {
-            path: paths.value.length > 1 ? newPath.join('/') : 'root',
+            path: paths.value.length === 0 ? 'root' : newPath.join('/'),
             name: folderPayload.value.name,
           },
         },
@@ -703,6 +709,7 @@ async function refresh() {
   try {
     loading.value = true;
     await fetchFiles(paths.value.join('/'));
+    console.log('🚀 ~ refresh ~ paths.value:', paths.value);
     loading.value = false;
   } catch (error) {
     console.log('🚀 ~ refresh ~ error:', error);
@@ -717,33 +724,25 @@ const slider = computed(() => {
 
 onMounted(async () => {
   loading.value = true;
-  if (route.query.path) {
-    paths.value = route.query.path.split('/');
-    await fetchFiles(paths.value.join('/'));
-    loading.value = false;
-  } else {
-    const query = { path: '/' };
-    router.push({ query: query });
-
-    await fetchFiles('/');
-    loading.value = false;
-  }
+  await fetchFiles(paths.value.join('/'));
+  loading.value = false;
 });
 
 const goBack = async () => {
   loading.value = true;
 
   paths.value.pop();
-  const newQuery = { path: paths.value.join('/') };
-  router.push({ query: newQuery });
   await fetchFiles(paths.value.join('/'));
   loading.value = false;
 };
 
 const fetchFiles = async (folder) => {
+  console.log('🚀 ~ fetchFiles ~ folder:', folder);
   let folderPath = '';
   if (folder && folder[0] === '/') {
     folderPath = folder.slice(1, folder.length);
+  } else {
+    folderPath = folder;
   }
   console.log('🚀 ~ fetchFiles ~ folderPath:', folderPath);
   try {
@@ -753,15 +752,6 @@ const fetchFiles = async (folder) => {
       },
     });
     console.log('🚀 ~ fetchFiles ~ response:', response);
-    // const response = await $fetch("http://localhost:8000/api/file/list", {
-    //   method: "GET",
-    //   query: {
-    //     path: encodeURIComponent(folder),
-    //   },
-    //   onResponse({ response }) {
-    //     console.log("Status Code:", response.status);
-    //   },
-    // });
 
     if (response.data.status === 'OK') {
       folders.value = response.data.result.map((item) => {
@@ -786,9 +776,7 @@ const handleFolderClickFromChild = async (folder) => {
   loading.value = true;
 
   paths.value.push(folder.name);
-
-  const query = { path: paths.value.join('/') };
-  router.push({ query: query });
+  console.log('🚀 ~ handleFolderClickFromChild ~ paths.value:', paths.value);
 
   await fetchFiles(paths.value.join('/'));
   loading.value = false;
@@ -810,11 +798,52 @@ const handleFileClickFromChild = (file, type) => {
     window.open(viewFileUrl.value, '_blank');
   }
 };
+
+const handleDeleteRequestFromChild = async (folder) => {
+  console.log('🚀 ~ handleDeleteRequestFromChild ~ folder:', folder);
+
+  try {
+    let response = null;
+
+    if (folder.type == 'directory') {
+      response = await $axios.post(
+        'file/delete-folder',
+        {},
+        {
+          params: {
+            path:
+              paths.value.length === 0
+                ? folder.name
+                : paths.join('/') + `${folder.name}`,
+          },
+        },
+      );
+    } else {
+      response = await $axios.post(
+        'file/delete-file',
+        {},
+        {
+          params: {
+            path:
+              paths.value.length === 0
+                ? folder.name
+                : paths.join('/') + `${folder.name}`,
+          },
+        },
+      );
+    }
+
+    if (response.data.status === 'OK') {
+    }
+  } catch (error) {
+    console.log('🚀 ~ handleDeleteRequestFromChild ~ error:', error);
+  }
+};
 let folders = ref([]);
 
 let folderDetails = ref([]);
 
-let paths = ref(['']);
+let paths = ref([]);
 </script>
 
 <style>
