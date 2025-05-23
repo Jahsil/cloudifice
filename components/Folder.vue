@@ -28,7 +28,7 @@
         "
         @click="handleFileClick(folder, 'image')"
         :style="{ width: size, height: size }"
-        src="/public/image.png"
+        src="/public/image2.png"
         alt="directory-image"
       />
 
@@ -40,7 +40,7 @@
         "
         @click="handleFileClick(folder, 'video')"
         :style="{ width: size, height: size }"
-        src="/public/video.png"
+        src="/public/multimedia.png"
         alt="directory-image"
       />
 
@@ -52,7 +52,7 @@
         "
         @click="handleFileClick(folder, 'document')"
         :style="{ width: size, height: size }"
-        src="/public/file.png"
+        src="/public/google-docs.png"
         alt="directory-image"
       />
 
@@ -61,7 +61,7 @@
         v-else
         @click="handleFileClick(folder, 'other')"
         :style="{ width: size, height: size }"
-        src="/public/directory.svg"
+        src="/public/unknown.png"
         alt="directory-image"
       />
 
@@ -89,19 +89,27 @@
         >
           👀 View
         </a>
+        <p
+          class="block w-full text-left px-4 py-2 hover:bg-gray-200"
+          @click="deleteItem"
+        >
+          🗑️ Delete
+        </p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-const emit = defineEmits(["folder", "file"]);
+const { $axios } = useNuxtApp();
+
+const emit = defineEmits(['folder', 'file', 'deleteFolder']);
 
 const handleFolderClick = (folder) => {
-  emit("folder", folder);
+  emit('folder', folder);
 };
 const handleFileClick = (file, type) => {
-  emit("file", file, type);
+  emit('file', file, type);
 };
 const props = defineProps({
   folders: {
@@ -114,88 +122,88 @@ const props = defineProps({
 });
 
 const imageFileTypes = [
-  "jpg",
-  "jpeg",
-  "png",
-  "gif",
-  "bmp",
-  "tiff",
-  "tif",
-  "webp",
-  "heif",
-  "heic",
-  "ico",
-  "psd",
-  "cr2",
-  "cr3",
-  "nef",
-  "arw",
-  "raf",
-  "orf",
-  "rw2",
-  "dng",
-  "svg",
-  "ai",
-  "eps",
-  "wmf",
-  "stl",
-  "obj",
-  "ply",
+  'jpg',
+  'jpeg',
+  'png',
+  'gif',
+  'bmp',
+  'tiff',
+  'tif',
+  'webp',
+  'heif',
+  'heic',
+  'ico',
+  'psd',
+  'cr2',
+  'cr3',
+  'nef',
+  'arw',
+  'raf',
+  'orf',
+  'rw2',
+  'dng',
+  'svg',
+  'ai',
+  'eps',
+  'wmf',
+  'stl',
+  'obj',
+  'ply',
 ];
 
 const videoFileTypes = [
-  "mp4",
-  "mov",
-  "avi",
-  "wmv",
-  "mkv",
-  "flv",
-  "webm",
-  "m4v",
-  "3gp",
-  "3g2",
-  "mxf",
-  "mpg",
-  "mpeg",
-  "ts",
-  "mts",
-  "rm",
-  "rmvb",
-  "asf",
-  "vob",
-  "gifv",
-  "f4v",
-  "f4p",
-  "f4a",
-  "f4b",
+  'mp4',
+  'mov',
+  'avi',
+  'wmv',
+  'mkv',
+  'flv',
+  'webm',
+  'm4v',
+  '3gp',
+  '3g2',
+  'mxf',
+  'mpg',
+  'mpeg',
+  'ts',
+  'mts',
+  'rm',
+  'rmvb',
+  'asf',
+  'vob',
+  'gifv',
+  'f4v',
+  'f4p',
+  'f4a',
+  'f4b',
 ];
 
 const documentFileTypes = [
-  "txt",
-  "doc",
-  "docx",
-  "rtf",
-  "odt",
-  "xls",
-  "xlsx",
-  "ods",
-  "csv",
-  "ppt",
-  "pptx",
-  "odp",
-  "pdf",
-  "epub",
-  "mobi",
-  "azw",
-  "azw3",
-  "html",
-  "htm",
-  "xml",
-  "md",
-  "wps",
-  "wpd",
-  "tex",
-  "xps",
+  'txt',
+  'doc',
+  'docx',
+  'rtf',
+  'odt',
+  'xls',
+  'xlsx',
+  'ods',
+  'csv',
+  'ppt',
+  'pptx',
+  'odp',
+  'pdf',
+  'epub',
+  'mobi',
+  'azw',
+  'azw3',
+  'html',
+  'htm',
+  'xml',
+  'md',
+  'wps',
+  'wpd',
+  'tex',
+  'xps',
 ];
 
 const showMenu = ref(false);
@@ -212,11 +220,11 @@ const openContextMenu = (event, item) => {
 };
 
 const download = () => {
-  console.log("Download:", selectedItem.value);
+  console.log('Download:', selectedItem.value);
   showMenu.value = false;
-  emit("file", selectedItem.value, "download");
+  emit('file', selectedItem.value, 'download');
 
-  const baseUrl = "http://localhost:8000/view-file";
+  const baseUrl = 'http://localhost:8000/view-file';
   const encodedPath = encodeURIComponent(file.path);
 
   downloadFileUrl.value = `${baseUrl}?path=${encodedPath}&action=download`;
@@ -225,26 +233,30 @@ const download = () => {
 };
 
 const view = () => {
-  console.log("View:", selectedItem.value);
+  console.log('View:', selectedItem.value);
   showMenu.value = false;
-  emit("file", selectedItem.value, "view");
+  emit('file', selectedItem.value, 'view');
 
   // Implement view logic
 };
 
+const deleteItem = async () => {
+  emit('deleteFolder', selectedItem.value);
+};
+
 // Close menu when clicking outside
 const closeMenu = (event) => {
-  if (!event.target.closest(".fixed")) {
+  if (!event.target.closest('.fixed')) {
     showMenu.value = false;
   }
 };
 
 onMounted(() => {
-  document.addEventListener("click", closeMenu);
+  document.addEventListener('click', closeMenu);
 });
 
 onUnmounted(() => {
-  document.removeEventListener("click", closeMenu);
+  document.removeEventListener('click', closeMenu);
 });
 </script>
 
