@@ -267,94 +267,11 @@
               </svg>
             </div>
           </div>
-
-          <!-- Filter Dropdown -->
-          <div class="relative">
-            <button
-              @click="toggleFilterDropdown"
-              class="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path
-                  d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"
-                />
-              </svg>
-              <span class="font-semibold">Filter</span>
-            </button>
-
-            <!-- Filter Dropdown Content -->
-            <div
-              v-if="isFilterDropdownOpen"
-              class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-            >
-              <div class="py-1">
-                <div class="px-4 py-2 border-b border-gray-100">
-                  <h4 class="text-sm font-medium text-gray-700">File Type</h4>
-                </div>
-                <div class="px-4 py-2">
-                  <label class="flex items-center gap-2">
-                    <input
-                      v-model="filters.type"
-                      type="checkbox"
-                      value="image"
-                      class="rounded text-blue-600"
-                    />
-                    <span class="text-sm">Images</span>
-                  </label>
-                  <label class="flex items-center gap-2 mt-2">
-                    <input
-                      v-model="filters.type"
-                      type="checkbox"
-                      value="video"
-                      class="rounded text-blue-600"
-                    />
-                    <span class="text-sm">Videos</span>
-                  </label>
-                  <label class="flex items-center gap-2 mt-2">
-                    <input
-                      v-model="filters.type"
-                      type="checkbox"
-                      value="document"
-                      class="rounded text-blue-600"
-                    />
-                    <span class="text-sm">Documents</span>
-                  </label>
-                  <label class="flex items-center gap-2 mt-2">
-                    <input
-                      v-model="filters.type"
-                      type="checkbox"
-                      value="other"
-                      class="rounded text-blue-600"
-                    />
-                    <span class="text-sm">Other</span>
-                  </label>
-                </div>
-                <div class="px-4 py-2 border-t border-gray-100">
-                  <button
-                    @click="resetFilters"
-                    class="text-sm text-blue-600 hover:text-blue-800"
-                  >
-                    Reset Filters
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 
       <!-- Recent Files Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
         <FileCard
           v-for="file in filteredRecentFiles"
           :key="file.id"
