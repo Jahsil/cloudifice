@@ -535,6 +535,10 @@ import { ref } from 'vue';
 import Modal from '~/components/Modal.vue';
 import { useAuthStore } from '@/stores/auth';
 
+const config = useRuntimeConfig();
+const apiBase = config.public.apiBase;
+const brodcastApiBase = config.public.brodcastApiBase;
+
 const { $axios } = useNuxtApp();
 const auth = useAuthStore();
 
@@ -606,7 +610,6 @@ const uploadFile = async () => {
     const response = await $axios.post('file/check_chunk', {
       fileName: file.value.name,
     });
-    console.log('🚀 ~ uploadFile ~ response:', response);
     fileChunkIndex = response.data.data;
   } catch (error) {
     console.log('🚀 ~ uploadFile ~ error:', error);
@@ -694,7 +697,6 @@ async function createFolder() {
           },
         },
       );
-      console.log('🚀 ~ createFolder ~ response:', response);
       if (response.data.status === 'OK') {
       }
       showModal.value = false;
@@ -709,7 +711,6 @@ async function refresh() {
   try {
     loading.value = true;
     await fetchFiles(paths.value.join('/'));
-    console.log('🚀 ~ refresh ~ paths.value:', paths.value);
     loading.value = false;
   } catch (error) {
     console.log('🚀 ~ refresh ~ error:', error);
@@ -737,21 +738,18 @@ const goBack = async () => {
 };
 
 const fetchFiles = async (folder) => {
-  console.log('🚀 ~ fetchFiles ~ folder:', folder);
   let folderPath = '';
   if (folder && folder[0] === '/') {
     folderPath = folder.slice(1, folder.length);
   } else {
     folderPath = folder;
   }
-  console.log('🚀 ~ fetchFiles ~ folderPath:', folderPath);
   try {
     const response = await $axios.get('/file/list', {
       params: {
         path: encodeURIComponent(folderPath),
       },
     });
-    console.log('🚀 ~ fetchFiles ~ response:', response);
 
     if (response.data.status === 'OK') {
       folders.value = response.data.result.map((item) => {
@@ -776,7 +774,6 @@ const handleFolderClickFromChild = async (folder) => {
   loading.value = true;
 
   paths.value.push(folder.name);
-  console.log('🚀 ~ handleFolderClickFromChild ~ paths.value:', paths.value);
 
   await fetchFiles(paths.value.join('/'));
   loading.value = false;
@@ -785,9 +782,8 @@ const handleFileClickFromChild = (file, type) => {
   let filePath = paths.value.join('/');
   filePath += '/';
   filePath += file.name;
-  console.log('🚀 ~ handleFileClickFromChild ~ filePath:', filePath);
 
-  const baseUrl = 'http://localhost:8000/view-file';
+  const baseUrl = `${brodcastApiBase}/view-file`;
   const encodedPath = encodeURIComponent(filePath);
 
   if (type === 'view') {
@@ -800,8 +796,6 @@ const handleFileClickFromChild = (file, type) => {
 };
 
 const handleDeleteRequestFromChild = async (folder) => {
-  console.log('🚀 ~ handleDeleteRequestFromChild ~ folder:', folder);
-
   try {
     let response = null;
 
