@@ -105,9 +105,6 @@ const { $axios } = useNuxtApp();
 
 const emit = defineEmits(['folder', 'file', 'deleteFolder']);
 
-const config = useRuntimeConfig();
-const apiBase = config.public.apiBase;
-
 const handleFolderClick = (folder) => {
   emit('folder', folder);
 };
@@ -223,24 +220,13 @@ const openContextMenu = (event, item) => {
 };
 
 const download = () => {
-  console.log('Download:', selectedItem.value);
   showMenu.value = false;
   emit('file', selectedItem.value, 'download');
-
-  const baseUrl = `${apiBase}/view-file`;
-  const encodedPath = encodeURIComponent(file.path);
-
-  downloadFileUrl.value = `${baseUrl}?path=${encodedPath}&action=download`;
-
-  // Implement download logic
 };
 
 const view = () => {
-  console.log('View:', selectedItem.value);
   showMenu.value = false;
   emit('file', selectedItem.value, 'view');
-
-  // Implement view logic
 };
 
 const deleteItem = async () => {
