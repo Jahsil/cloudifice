@@ -48,11 +48,14 @@
       </div>
 
       <div
+        class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-white rounded-full"
+      ></div>
+      <!-- <div
         v-if="showStatus"
         class="absolute flex justify-center items-center left-9 m-2 top-10 rounded-full bg-white w-4 h-4"
       >
         <div class="w-3 h-3 bg-green-700 rounded-full"></div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -60,10 +63,10 @@
 <script setup>
 const props = defineProps({
   width: {
-    default: "68px",
+    default: '68px',
   },
   height: {
-    default: "68px",
+    default: '68px',
   },
   status: {
     default: 0,
@@ -75,17 +78,17 @@ const props = defineProps({
     default: true,
   },
   firstName: {
-    default: "Cloudifice",
+    default: 'Cloudifice',
   },
   fontSize: {
-    deafult: "",
+    deafult: '',
   },
   lineHeight: {
-    deafult: "",
+    deafult: '',
   },
 });
 
-console.log("Account Image :::", props.accountImg);
+console.log('Account Image :::', props.accountImg);
 
 onMounted(() => {});
 </script>

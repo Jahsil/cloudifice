@@ -1,359 +1,682 @@
 <template>
-  <div>
-    <div class="px-4 mt-8">
-      <div class="grid grid-cols-1 lg:grid-cols-4 gap-1">
-        <div class="col-span-1">
-          <input
-            id="search"
-            type="text"
-            placeholder="People, chat, keywords"
-            :class="{
-              'w-64 pl-4 py-2  rounded-md  text-sm placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 border border-neutral-300 focus:outline-none shadow-sm transition-all duration-200': true,
-            }"
-          />
+  <div
+    class="h-[calc(100vh-8rem)] overflow-hidden bg-gradient-to-br from-slate-50 to-blue-50"
+  >
+    <!-- Mobile View -->
+    <div class="lg:hidden h-full">
+      <!-- People List View (Mobile) -->
+      <div
+        v-if="!selectedUser || showPeopleList"
+        class="h-full flex flex-col bg-white"
+      >
+        <!-- Mobile Header -->
+        <div
+          class="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 px-6 py-8 text-white shadow-lg"
+        >
+          <!-- Decorative elements -->
+          <div
+            class="absolute top-0 right-0 w-32 h-32 bg-blue-500 rounded-full mix-blend-screen opacity-20 transform translate-x-12 -translate-y-12"
+          ></div>
+          <div
+            class="absolute bottom-0 left-0 w-40 h-40 bg-indigo-600 rounded-full mix-blend-screen opacity-20 transform -translate-x-16 translate-y-16"
+          ></div>
 
-          <div class="mt-8 h-[85vh] overflow-y-scroll scrollbar-hidden">
-            <div
-              v-for="(message, index) in messages"
-              :key="index"
-              @click="viewMessage(index, message)"
-              class="p-2 flex justify-between items-center"
-              :class="{
-                'border-r-[3px] border-blue-500': selectedMessage === index,
-              }"
-            >
-              <div class="flex justify-start items-center gap-2">
-                <AccountImg
-                  :account-img="
-                    message.profile_image_url ? message.profile_image_url : null
-                  "
-                  :first-name="message.first_name"
-                />
-                <div class="flex-col gap-4 overflow-clip">
-                  <p>{{ message.first_name }} {{ message.last_name }}</p>
-                  <p class="text-sm text-neutral-400 h-10">
-                    {{ message.lastMessage }}
-                  </p>
-                </div>
-              </div>
+          <!-- Content -->
+          <div class="relative z-10">
+            <div class="flex items-center justify-between">
               <div>
-                <p class="text-sm text-neutral-400">
-                  {{ formatDate(message.lastMessageTime) }}
+                <h1 class="text-3xl font-bold tracking-tight">Messages</h1>
+                <p class="text-blue-100/90 text-sm mt-2 font-medium">
+                  Stay connected with your team
+                </p>
+              </div>
+
+              <!-- Notification badge -->
+              <div class="relative">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="w-6 h-6 text-blue-200"
+                >
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+                <span
+                  class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center text-xs font-bold animate-pulse"
+                  >3</span
+                >
+              </div>
+            </div>
+
+            <!-- Search bar -->
+            <div class="mt-6 relative">
+              <input
+                type="text"
+                placeholder="Search messages..."
+                class="w-full pl-10 pr-4 py-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white/30 placeholder-blue-200/80 transition-all duration-200"
+              />
+              <div class="absolute left-3 top-3.5 text-blue-200/80">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subtle wave effect at bottom -->
+          <div
+            class="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-t from-white/10 to-transparent"
+          ></div>
+        </div>
+
+        <!-- Search -->
+        <div class="p-4 bg-white shadow-sm">
+          <div class="relative">
+            <svg
+              class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              ></path>
+            </svg>
+            <input
+              type="text"
+              placeholder="Search conversations..."
+              class="w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50 border-0 focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all duration-200"
+            />
+          </div>
+        </div>
+
+        <!-- People List -->
+        <div class="flex-1 overflow-y-auto">
+          <div
+            v-for="(message, index) in messages"
+            :key="index"
+            @click="selectUserMobile(index, message)"
+            class="px-4 py-4 border-b border-gray-100 hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150 cursor-pointer"
+          >
+            <div class="flex items-center space-x-3">
+              <div class="relative flex-shrink-0">
+                <AccountImg
+                  :account-img="message.profile_image_url"
+                  :first-name="message.first_name"
+                  height="48px"
+                  width="48px"
+                />
+                <div
+                  class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-white rounded-full"
+                ></div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex justify-between items-start">
+                  <h3 class="font-semibold text-gray-900 truncate">
+                    {{ message.first_name }} {{ message.last_name }}
+                  </h3>
+                  <span class="text-xs text-gray-500 whitespace-nowrap ml-2">
+                    {{ formatDate(message.lastMessageTime) }}
+                  </span>
+                </div>
+                <p class="text-sm text-gray-600 truncate mt-1">
+                  {{ message.lastMessage }}
                 </p>
               </div>
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- Chat View (Mobile) -->
+      <div
+        v-if="selectedUser && !showPeopleList"
+        class="h-full flex flex-col bg-white"
+      >
+        <!-- Chat Header with Back Button -->
         <div
-          v-if="selectedUser"
-          class="relative border h-[80vh]"
-          :class="{ 'col-span-2': accountInfo, 'col-span-3': !accountInfo }"
+          class="bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-4 text-white shadow-lg"
         >
-          <div
-            class="sticky top-0 bg-white flex justify-between items-center border-b border-neutral-300 pb-2 px-2"
-          >
-            <div
-              @click="toogleAccountInfo"
-              class="flex justify-start items-center gap-2"
+          <div class="flex items-center space-x-3">
+            <button
+              @click="showPeopleList = true"
+              class="p-2 hover:bg-blue-600 rounded-full transition-colors duration-150"
             >
+              <svg
+                class="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 19l-7-7 7-7"
+                ></path>
+              </svg>
+            </button>
+            <div class="flex items-center space-x-3 flex-1 min-w-0">
               <AccountImg
-                :account-img="
-                  selectedUser.profile_image_url
-                    ? selectedUser.profile_image_url
-                    : null
-                "
+                :account-img="selectedUser.profile_image_url"
                 :first-name="selectedUser.first_name"
                 :show-status="false"
+                height="40px"
+                width="40px"
               />
-              <div class="flex-col gap-4">
-                <p>
+              <div class="min-w-0">
+                <h2 class="font-semibold truncate">
                   {{ selectedUser.first_name }} {{ selectedUser.last_name }}
-                </p>
-                <p class="text-sm text-green-600">online</p>
+                </h2>
+                <p class="text-blue-100 text-sm">Online</p>
               </div>
             </div>
-            <div>
+            <button
+              class="p-2 hover:bg-blue-600 rounded-full transition-colors duration-150"
+            >
               <svg
-                class="text-blue-600"
-                xmlns="http://www.w3.org/2000/svg"
-                width="25"
-                height="25"
+                class="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
                 viewBox="0 0 24 24"
               >
                 <path
-                  fill="none"
-                  stroke="currentColor"
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                  stroke-width="1.5"
-                  d="M3.778 11.942C2.83 10.29 2.372 8.94 2.096 7.572c-.408-2.024.526-4.001 2.073-5.263c.654-.533 1.404-.35 1.791.343l.873 1.567c.692 1.242 1.038 1.862.97 2.52c-.069.659-.536 1.195-1.469 2.267zm0 0c1.919 3.346 4.93 6.36 8.28 8.28m0 0c1.653.948 3.002 1.406 4.37 1.682c2.024.408 4.001-.526 5.262-2.073c.534-.654.351-1.404-.342-1.791l-1.567-.873c-1.242-.692-1.862-1.038-2.52-.97c-.659.069-1.195.536-2.267 1.469z"
-                  color="currentColor"
-                />
-              </svg>
-            </div>
-          </div>
-
-          <div
-            ref="chatContainer"
-            class="h-[100%] px-4 overflow-y-scroll custom-scrollbar"
-          >
-            <div
-              v-for="(chat, index) in chats"
-              :key="chat.id"
-              class="flex items-end mb-2"
-              :class="{
-                'justify-end': chat.sender_id === auth.user.id,
-                'justify-start': chat.sender_id !== auth.user.id,
-              }"
-            >
-              <!-- Avatar for received messages -->
-              <div class="mr-2">
-                <AccountImg
-                  :account-img="
-                    selectedUser.profile_image_url
-                      ? selectedUser.profile_image_url
-                      : null
-                  "
-                  v-if="chat.sender_id !== auth.user.id"
-                  font-size="14px"
-                  line-height="1.43"
-                  height="32px"
-                  width="32px"
-                  :first-name="selectedUser.first_name"
-                  :show-status="false"
-                />
-              </div>
-              <!-- <img
-                v-if="chat.sender_id !== auth.user.id"
-                src="/public/account.jpg"
-                alt="User Avatar"
-                class="w-8 h-8 rounded-full mr-2"
-              /> -->
-
-              <div class="max-w-[75%] my-2">
-                <div class="flex justify-between">
-                  <p class="text-sm font-medium">
-                    <span v-if="chat.sender_id === auth.user.id"
-                      >{{ auth.user.first_name }}
-                      {{ auth.user.last_name }}</span
-                    >
-                    <span v-if="chat.sender_id !== auth.user.id"
-                      >{{ selectedUser.first_name }}
-                      {{ selectedUser.last_name }}</span
-                    >
-                  </p>
-                  <p
-                    class="text-xs mt-1 text-right"
-                    :class="{
-                      'text-black': chat.sender_id === auth.user.id,
-                      'text-black': chat.sender_id !== auth.user.id,
-                    }"
-                  >
-                    {{ formatDate(chat.created_at) }}
-                  </p>
-                </div>
-
-                <p
-                  class="text-base p-3 rounded-lg shadow-sm"
-                  :class="{
-                    'bg-blue-500 text-white self-end':
-                      chat.sender_id === auth.user.id,
-                    'bg-[#f7f7f7] text-gray-900 self-start':
-                      chat.sender_id !== auth.user.id,
-                  }"
-                >
-                  {{ chat.message }}
-                </p>
-              </div>
-
-              <!-- Avatar for sent messages -->
-              <div class="ml-2">
-                <AccountImg
-                  v-if="chat.sender_id === auth.user.id"
-                  font-size="14px"
-                  line-height="1.43"
-                  height="32px"
-                  width="32px"
-                  :first-name="auth.user.first_name"
-                  :show-status="false"
-                />
-              </div>
-
-              <!-- <img
-                v-if="chat.sender_id === auth.user.id"
-                src="/public/office.jpg"
-                alt="My Avatar"
-                class="w-8 h-8 rounded-full ml-2"
-              /> -->
-            </div>
-          </div>
-          <!-- text input area  -->
-          <div
-            class="sticky flex justify-center items-center gap-2 pb-0 h-20 bg-white/30 backdrop-blur-md w-full"
-          >
-            <input
-              id="search"
-              type="text"
-              @keyup.enter="sendMessage"
-              v-model="inputMessage"
-              placeholder="People, chat, keywords"
-              :class="{
-                'w-96 pl-4 py-2 h-1/2 rounded-3xl  text-sm placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 border border-neutral-500 focus:outline-none shadow-sm transition-all duration-200': true,
-              }"
-            />
-            <!-- <svg
-              class="text-blue-600"
-              xmlns="http://www.w3.org/2000/svg"
-              width="25"
-              height="25"
-              viewBox="0 0 24 24"
-            >
-              <g
-                fill="none"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-                color="currentColor"
-              >
-                <path
-                  d="M22 12.5c0-.491-.005-1.483-.016-1.976c-.065-3.065-.098-4.598-1.229-5.733c-1.131-1.136-2.705-1.175-5.854-1.254a115 115 0 0 0-5.802 0c-3.149.079-4.723.118-5.854 1.254c-1.131 1.135-1.164 2.668-1.23 5.733a69 69 0 0 0 0 2.952c.066 3.065.099 4.598 1.23 5.733c1.131 1.136 2.705 1.175 5.854 1.254q1.204.03 2.401.036"
-                />
-                <path
-                  d="m2 6l6.913 3.925c2.526 1.433 3.648 1.433 6.174 0L22 6m0 11.5h-8m8 0c0-.7-1.994-2.008-2.5-2.5m2.5 2.5c0 .7-1.994 2.009-2.5 2.5"
-                />
-              </g>
-            </svg> -->
-            <svg
-              class="text-blue-600"
-              xmlns="http://www.w3.org/2000/svg"
-              width="25"
-              height="25"
-              viewBox="0 0 24 24"
-            >
-              <path
-                fill="none"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-                d="M19.5 12v1.5a7.5 7.5 0 0 1-15 0V8a5 5 0 0 1 10 0v5.5a2.5 2.5 0 0 1-5 0v-4"
-                color="currentColor"
-              />
-            </svg>
-            <svg
-              class="text-blue-600"
-              xmlns="http://www.w3.org/2000/svg"
-              width="25"
-              height="25"
-              viewBox="0 0 24 24"
-            >
-              <path
-                fill="none"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-                d="M17 7v4a5 5 0 0 1-10 0V7a5 5 0 0 1 10 0m0 0h-3m3 4h-3m6 0a8 8 0 0 1-8 8m0 0a8 8 0 0 1-8-8m8 8v3m0 0h3m-3 0H9"
-                color="currentColor"
-              />
-            </svg>
-          </div>
-        </div>
-        <div v-if="accountInfo" :class="{ 'col-span-1': !accountInfo }">
-          <div class="flex justify-end">
-            <button @click="toogleAccountInfo">
-              <svg
-                class="text-blue-600"
-                xmlns="http://www.w3.org/2000/svg"
-                width="25"
-                height="25"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="1.5"
-                  d="M19 5L5 19M5 5l14 14"
-                  color="currentColor"
-                />
+                  stroke-width="2"
+                  d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                ></path>
               </svg>
             </button>
           </div>
-          <div class="mt-8 flex flex-col items-center">
+        </div>
+
+        <!-- Messages -->
+        <div ref="chatContainer" class="flex-1 overflow-y-auto p-4 space-y-4">
+          <div
+            v-for="chat in chats"
+            :key="chat.id"
+            class="flex items-end space-x-2"
+            :class="
+              chat.sender_id === auth.user.id ? 'justify-end' : 'justify-start'
+            "
+          >
+            <div v-if="chat.sender_id !== auth.user.id" class="flex-shrink-0">
+              <AccountImg
+                :account-img="selectedUser.profile_image_url"
+                :first-name="selectedUser.first_name"
+                :show-status="false"
+                height="32px"
+                width="32px"
+              />
+            </div>
+
+            <div class="max-w-xs lg:max-w-md">
+              <div
+                class="px-4 py-3 rounded-2xl shadow-sm"
+                :class="{
+                  'bg-blue-500 text-white rounded-br-md':
+                    chat.sender_id === auth.user.id,
+                  'bg-white text-gray-800 border rounded-bl-md':
+                    chat.sender_id !== auth.user.id,
+                }"
+              >
+                <p class="text-sm">{{ chat.message }}</p>
+              </div>
+              <p class="text-xs text-gray-500 mt-1 px-2">
+                {{ formatDate(chat.created_at) }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Message Input -->
+        <div class="p-4 bg-white border-t border-gray-200">
+          <div class="flex items-center space-x-3">
+            <button
+              class="p-2 text-gray-400 hover:text-blue-500 transition-colors duration-150"
+            >
+              <svg
+                class="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
+                ></path>
+              </svg>
+            </button>
+            <div class="flex-1 relative">
+              <input
+                v-model="inputMessage"
+                @keyup.enter="sendMessage"
+                type="text"
+                placeholder="Type a message..."
+                class="w-full px-4 py-3 rounded-full bg-gray-100 border-0 focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all duration-200"
+              />
+            </div>
+            <button
+              @click="sendMessage"
+              class="p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors duration-150 shadow-lg"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Desktop View -->
+    <div class="hidden lg:flex h-full">
+      <!-- People Sidebar -->
+      <div
+        class="w-80 xl:w-96 bg-white border-r border-gray-200 flex flex-col shadow-sm"
+      >
+        <!-- Header -->
+        <div
+          class="p-6 border-b border-gray-200 bg-gradient-to-br from-blue-600 to-blue-500 text-white"
+        >
+          <h1 class="text-xl font-bold">Messages</h1>
+          <p class="text-blue-100 text-sm mt-1">
+            {{ messages.length }} conversations
+          </p>
+        </div>
+
+        <!-- Search -->
+        <div class="p-4">
+          <div class="relative">
+            <svg
+              class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              ></path>
+            </svg>
+            <input
+              type="text"
+              placeholder="Search conversations..."
+              class="w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50 border-0 focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all duration-200"
+            />
+          </div>
+        </div>
+
+        <!-- People List -->
+        <div class="flex-1 overflow-y-auto">
+          <div
+            v-for="(message, index) in messages"
+            :key="index"
+            @click="viewMessage(index, message)"
+            class="px-4 py-4 border-b border-gray-100 hover:bg-blue-50 cursor-pointer transition-all duration-150"
+            :class="{
+              'bg-blue-50 border-r-4 border-blue-500':
+                selectedMessage === index,
+            }"
+          >
+            <div class="flex items-center space-x-3">
+              <div class="relative flex-shrink-0">
+                <AccountImg
+                  :account-img="message.profile_image_url"
+                  :first-name="message.first_name"
+                  height="48px"
+                  width="48px"
+                />
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex justify-between items-start">
+                  <h3 class="font-semibold text-gray-900 truncate">
+                    {{ message.first_name }} {{ message.last_name }}
+                  </h3>
+                  <span class="text-xs text-gray-500 whitespace-nowrap ml-2">
+                    {{ formatDate(message.lastMessageTime) }}
+                  </span>
+                </div>
+                <p class="text-sm text-gray-600 truncate mt-1">
+                  {{ message.lastMessage }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Chat Area -->
+      <div
+        v-if="selectedUser"
+        class="flex-1 flex flex-col bg-white"
+        :class="{
+          'lg:flex-1': !accountInfo,
+          'lg:flex-1 xl:flex-1': accountInfo,
+        }"
+      >
+        <!-- Chat Header -->
+        <div class="px-6 py-4 border-b border-gray-200 bg-white shadow-sm">
+          <div class="flex items-center justify-between">
+            <div
+              @click="toogleAccountInfo"
+              class="flex items-center space-x-3 cursor-pointer hover:bg-gray-50 rounded-lg p-2 -m-2 transition-colors duration-150"
+            >
+              <AccountImg
+                :account-img="selectedUser.profile_image_url"
+                :first-name="selectedUser.first_name"
+                :show-status="false"
+                height="44px"
+                width="44px"
+              />
+              <div>
+                <h2 class="font-semibold text-gray-900">
+                  {{ selectedUser.first_name }} {{ selectedUser.last_name }}
+                </h2>
+                <p class="text-sm text-green-600">Online</p>
+              </div>
+            </div>
+
+            <div class="flex items-center space-x-2">
+              <button
+                class="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-all duration-150"
+              >
+                <svg
+                  class="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                  ></path>
+                </svg>
+              </button>
+              <button
+                class="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-all duration-150"
+              >
+                <svg
+                  class="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Messages Area -->
+        <div
+          ref="chatContainer"
+          class="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50"
+        >
+          <div
+            v-for="chat in chats"
+            :key="chat.id"
+            class="flex items-end space-x-3"
+            :class="
+              chat.sender_id === auth.user.id ? 'justify-end' : 'justify-start'
+            "
+          >
+            <div v-if="chat.sender_id !== auth.user.id" class="flex-shrink-0">
+              <AccountImg
+                :account-img="selectedUser.profile_image_url"
+                :first-name="selectedUser.first_name"
+                :show-status="false"
+                height="36px"
+                width="36px"
+              />
+            </div>
+
+            <div class="max-w-md">
+              <div
+                class="px-4 py-3 rounded-2xl shadow-sm"
+                :class="{
+                  'bg-blue-500 text-white rounded-br-md':
+                    chat.sender_id === auth.user.id,
+                  'bg-white text-gray-800 border rounded-bl-md':
+                    chat.sender_id !== auth.user.id,
+                }"
+              >
+                <p>{{ chat.message }}</p>
+              </div>
+              <p class="text-xs text-gray-500 mt-1 px-2">
+                {{ formatDate(chat.created_at) }}
+              </p>
+            </div>
+
+            <div v-if="chat.sender_id === auth.user.id" class="flex-shrink-0">
+              <AccountImg
+                :first-name="auth.user.first_name"
+                :show-status="false"
+                height="36px"
+                width="36px"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Message Input -->
+        <div class="p-6 bg-white border-t border-gray-200">
+          <div class="flex items-center space-x-4">
+            <button
+              class="p-2 text-gray-400 hover:text-blue-500 transition-colors duration-150"
+            >
+              <svg
+                class="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
+                ></path>
+              </svg>
+            </button>
+
+            <div class="flex-1 relative">
+              <input
+                v-model="inputMessage"
+                @keyup.enter="sendMessage"
+                type="text"
+                placeholder="Type your message..."
+                class="w-full px-6 py-4 rounded-full bg-gray-100 border-0 focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all duration-200 text-base"
+              />
+            </div>
+
+            <button
+              class="p-2 text-gray-400 hover:text-blue-500 transition-colors duration-150"
+            >
+              <svg
+                class="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
+                ></path>
+              </svg>
+            </button>
+
+            <button
+              @click="sendMessage"
+              class="px-6 py-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
+            >
+              Send
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Account Info Panel (Desktop Only) -->
+      <div
+        v-if="accountInfo && selectedUser"
+        class="w-80 bg-white border-l border-gray-200 flex flex-col"
+      >
+        <!-- Panel Header -->
+        <div
+          class="p-6 border-b border-gray-200 flex justify-between items-center"
+        >
+          <h3 class="font-semibold text-gray-900">Contact Info</h3>
+          <button
+            @click="toogleAccountInfo"
+            class="p-1 text-gray-400 hover:text-gray-600 transition-colors duration-150"
+          >
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto">
+          <!-- User Profile -->
+          <div class="p-6 text-center border-b border-gray-200">
             <AccountImg
-              :account-img="
-                selectedUser.profile_image_url
-                  ? selectedUser.profile_image_url
-                  : null
-              "
+              :account-img="selectedUser.profile_image_url"
               font-size="48px"
               line-height="1"
               :show-status="false"
               height="120px"
               width="120px"
+              class="mx-auto"
             />
-            <p class="text-xl font-medium mt-4">
+            <h3 class="text-xl font-semibold mt-4 text-gray-900">
               {{ selectedUser.first_name }} {{ selectedUser.last_name }}
-            </p>
-            <p class="text-neutral-500">@{{ selectedUser.username }}</p>
+            </h3>
+            <p class="text-gray-500 mt-1">@{{ selectedUser.username }}</p>
           </div>
-          <div class="px-4 mt-8">
-            <p class="text-neutral-700 text-lg py-2">Attachements</p>
 
-            <div
-              v-for="(attachment, index) in attachments"
-              :key="index"
-              class="flex gap-2 py-[6px]"
-            >
-              <div>
-                <svg
-                  :class="attachment.style"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="35"
-                  height="35"
-                  viewBox="0 0 24 24"
-                  v-html="attachment.img"
-                ></svg>
-              </div>
-              <div class="flex flex-col">
-                <p>{{ attachment.name }}</p>
-                <p class="text-neutral-500 text-sm">
-                  {{ attachment.size }} - {{ attachment.created_at }}
-                </p>
+          <!-- Attachments -->
+          <div class="p-6 border-b border-gray-200">
+            <h4 class="font-medium text-gray-900 mb-4">Recent Files</h4>
+            <div class="space-y-3">
+              <div
+                v-for="(attachment, index) in attachments"
+                :key="index"
+                class="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors duration-150"
+              >
+                <div
+                  class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0"
+                >
+                  <svg
+                    class="w-5 h-5 text-blue-600"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="font-medium text-gray-900 truncate">
+                    {{ attachment.name }}
+                  </p>
+                  <p class="text-sm text-gray-500">{{ attachment.size }}</p>
+                </div>
               </div>
             </div>
-            <p class="text-neutral-700 text-sm px-1">View all</p>
-
-            <p class="text-neutral-700 text-lg py-2">Members</p>
-
-            <div
-              v-for="(attachment, index) in attachments"
-              :key="index"
-              class="flex gap-2 py-[6px]"
+            <button
+              class="text-blue-600 text-sm font-medium mt-3 hover:text-blue-700"
             >
-              <div>
+              View all files
+            </button>
+          </div>
+
+          <!-- Members -->
+          <div class="p-6">
+            <h4 class="font-medium text-gray-900 mb-4">Group Members</h4>
+            <div class="space-y-3">
+              <div class="flex items-center space-x-3">
                 <AccountImg :show-status="false" height="40px" width="40px" />
-              </div>
-              <div class="flex flex-col justify-center">
-                <p>Eyouel Haile</p>
+                <div>
+                  <p class="font-medium text-gray-900">Eyouel Haile</p>
+                  <p class="text-sm text-green-600">Online</p>
+                </div>
               </div>
             </div>
-            <p class="text-neutral-700 text-sm px-1">View all</p>
+            <button
+              class="text-blue-600 text-sm font-medium mt-3 hover:text-blue-700"
+            >
+              View all members
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-
 <script setup>
-import { ref, nextTick } from "vue";
-import { useAuthStore } from "@/stores/auth";
-import { useNuxtApp } from "#app";
-import AccountImg from "~/components/AccountImg.vue";
+import { ref, nextTick } from 'vue';
+import { useAuthStore } from '@/stores/auth';
+import { useNuxtApp } from '#app';
+import AccountImg from '~/components/AccountImg.vue';
 
 const { $echo } = useNuxtApp();
 
@@ -363,8 +686,8 @@ let chats = ref([]);
 const { $axios } = useNuxtApp();
 
 const chatContainer = ref(null);
-const token = ref("");
-const inputMessage = ref("");
+const token = ref('');
+const inputMessage = ref('');
 const attachments = ref([]);
 const accountInfo = ref(false);
 const selectedMessage = ref(null);
@@ -382,12 +705,12 @@ const fetchOlderMessages = async () => {
   // 2. Simulate fetching older messages
   await new Promise((resolve) => setTimeout(resolve, 500)); // Simulated API call delay
   const olderMessages = [
-    { id: 3, sender_id: 2, message: "How are you?", created_at: "2024-02-12" },
+    { id: 3, sender_id: 2, message: 'How are you?', created_at: '2024-02-12' },
     {
       id: 4,
       sender_id: 1,
       message: "I'm good, you?",
-      created_at: "2024-02-12",
+      created_at: '2024-02-12',
     },
   ];
 
@@ -405,7 +728,7 @@ const fetchOlderMessages = async () => {
 
 const handleScroll = async () => {
   if (chatContainer.value && chatContainer.value.scrollTop === 0) {
-    console.log("Scrolled to the top", chatContainer.value.scrollTop);
+    console.log('Scrolled to the top', chatContainer.value.scrollTop);
 
     const previousScrollHeight = chatContainer.value.scrollHeight;
     const previousScrollTop = chatContainer.value.scrollTop;
@@ -427,10 +750,10 @@ const scrollToBottom = () => {
   }
 };
 
-const auth_token = useCookie("auth_token", {
+const auth_token = useCookie('auth_token', {
   secure: false, // Ensures it only works on HTTPS
   httpOnly: false, // Since we need JavaScript access
-  sameSite: "lax",
+  sameSite: 'lax',
 });
 
 token.value = auth_token.value;
@@ -441,11 +764,11 @@ onMounted(async () => {
   await nextTick(); // Ensures DOM updates before scrolling
   scrollToBottom();
   if (chatContainer.value) {
-    chatContainer.value.addEventListener("scroll", handleScroll);
+    chatContainer.value.addEventListener('scroll', handleScroll);
   }
-  console.log("Listening on ", `chat.${auth.user.id}`);
+  console.log('Listening on ', `chat.${auth.user.id}`);
 
-  $echo.private(`chat.${auth.user.id}`).listen("MessageSent", (event) => {
+  $echo.private(`chat.${auth.user.id}`).listen('MessageSent', (event) => {
     chats.value = [...chats.value, event.message];
 
     nextTick(() => {
@@ -462,8 +785,8 @@ const toogleAccountInfo = () => {
 
 attachments.value = [
   {
-    name: "Interesting file.doc",
-    style: "text-green-500",
+    name: 'Interesting file.doc',
+    style: 'text-green-500',
     img: `  <g
                     fill="none"
                     stroke="currentColor"
@@ -479,12 +802,12 @@ attachments.value = [
                       d="M14.945 12.395c-.176.627-1.012 1.07-2.682 1.955c-1.615.856-2.422 1.285-3.073 1.113a1.66 1.66 0 0 1-.712-.393C8 14.62 8 13.746 8 12s0-2.62.478-3.07c.198-.186.443-.321.712-.392c.65-.173 1.458.256 3.073 1.112c1.67.886 2.506 1.329 2.682 1.955c.073.259.073.531 0 .79"
                     />
                   </g>`,
-    size: "10 MB",
-    created_at: "12:00 PM",
+    size: '10 MB',
+    created_at: '12:00 PM',
   },
   {
-    name: "Frame to frame.pdf",
-    style: "text-orange-500",
+    name: 'Frame to frame.pdf',
+    style: 'text-orange-500',
 
     img: `  <g
                   fill="none"
@@ -501,12 +824,12 @@ attachments.value = [
                     d="M21 20.647V17c0-1.43-1.343-3-3-3s-3 1.57-3 3v3.5c0 .78.733 1.5 1.636 1.5c.904 0 1.637-.72 1.637-1.5v-2.735"
                   />
                 </g>`,
-    size: "56 MB",
-    created_at: "11:40 AM",
+    size: '56 MB',
+    created_at: '11:40 AM',
   },
   {
-    name: "Project of wall.mp4",
-    style: "text-blue-500",
+    name: 'Project of wall.mp4',
+    style: 'text-blue-500',
 
     img: `  <g
                   fill="none"
@@ -523,12 +846,12 @@ attachments.value = [
                     d="M20.5 12a3.333 3.333 0 0 1-3.333 3.333c-.666 0-1.451-.116-2.098.057a1.67 1.67 0 0 0-1.179 1.179c-.173.647-.057 1.432-.057 2.098A3.333 3.333 0 0 1 10.5 22"
                   />
                 </g>`,
-    size: "150 MB",
-    created_at: "09:00 PM",
+    size: '150 MB',
+    created_at: '09:00 PM',
   },
   {
-    name: "Catch you later.xls",
-    style: "text-red-500",
+    name: 'Catch you later.xls',
+    style: 'text-red-500',
 
     img: `  <g
         fill="none"
@@ -549,17 +872,17 @@ attachments.value = [
           d="M13 18c1.701-1.327 3.535-2.007 5.386-2a7.8 7.8 0 0 1 3.114.662"
         /> </g
       >`,
-    size: "5 MB",
-    created_at: "02:00 AM",
+    size: '5 MB',
+    created_at: '02:00 AM',
   },
 ];
 
 const formatDate = (timestamp) => {
   if (!timestamp) {
-    return "";
+    return '';
   }
   const date = new Date(timestamp);
-  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 };
 
 const viewMessage = async (index, message) => {
@@ -578,7 +901,7 @@ const getPeople = async () => {
     });
     messages.value = response.data.data;
   } catch (error) {
-    console.log("🚀 ~ getPeople ~ error:", error);
+    console.log('🚀 ~ getPeople ~ error:', error);
   }
 };
 
@@ -591,63 +914,73 @@ const getHistory = async (page = 1) => {
         headers: {
           Authorization: `Bearer ${token.value}`,
         },
-      }
+      },
     );
     chatHistory = response.data.data.data;
-    console.log("🚀 ~ getHistory ~ chatHistory:", chatHistory);
+    console.log('🚀 ~ getHistory ~ chatHistory:', chatHistory);
 
     chats.value = [...chatHistory.sort((a, b) => a.id - b.id), ...chats.value];
   } catch (error) {
-    console.log("🚀 ~ getHistory ~ error:", error);
+    console.log('🚀 ~ getHistory ~ error:', error);
   }
 };
 const sendMessage = async () => {
   try {
     let formData = {};
 
-    formData["message"] = inputMessage.value;
-    formData["group_id"] = null;
-    formData["receiver_id"] = selectedUser.value.id;
+    formData['message'] = inputMessage.value;
+    formData['group_id'] = null;
+    formData['receiver_id'] = selectedUser.value.id;
 
-    const response = await $axios.post("chat/send-message", formData, {
+    const response = await $axios.post('chat/send-message', formData, {
       headers: {
         Authorization: `Bearer ${token.value}`,
       },
     });
     if (response.status === 200 && response.data.message) {
       chats.value = [...chats.value, response.data.message];
-      inputMessage.value = "";
+      inputMessage.value = '';
 
       nextTick(() => {
         scrollToBottom();
       });
     }
   } catch (error) {
-    console.log("🚀 ~ sendMessage ~ error:", error);
+    console.log('🚀 ~ sendMessage ~ error:', error);
   }
 };
+
+const showPeopleList = ref(true);
+
+// Mobile-specific method
+const selectUserMobile = (index, message) => {
+  viewMessage(index, message);
+  showPeopleList.value = false;
+};
+
+// Your existing methods...
 </script>
 
 <style>
-.scrollbar-hidden::-webkit-scrollbar {
-  display: none;
-}
-
-.scrollbar-hidden {
-  scrollbar-width: none; /* Firefox */
-}
-
 ::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #3f83f8;
-  border-radius: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Hide scrollbar for firefox */
+.scrollbar-hidden {
+  scrollbar-width: none;
 }
 </style>
