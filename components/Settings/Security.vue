@@ -1,109 +1,170 @@
 <template>
-  <div class="px-20">
-    <div class="px-6 py-4">
-      <!-- Password Policy & Multi-Factor Authentication -->
-      <div class="flex gap-10 pt-4">
-        <!-- Password Policy -->
-        <div class="w-1/2 flex flex-col">
-          <p class="text-xl tracking-wide font-medium">Password Policy</p>
-          <p class="text-sm tracking-wide text-neutral-500">
-            Define the minimum password strength requirements
+  <div class="px-4 sm:px-6 lg:px-8">
+    <!-- Authentication Settings -->
+    <div class="space-y-6">
+      <div>
+        <h2 class="text-lg font-medium text-gray-900">Authentication</h2>
+        <p class="mt-1 text-sm text-gray-500">
+          Configure how users authenticate to your system
+        </p>
+      </div>
+      <div class="border-t border-gray-200"></div>
+
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div>
+          <label
+            for="passwordPolicy"
+            class="block text-sm font-medium text-gray-700"
+            >Password Policy</label
+          >
+          <p class="mt-1 text-sm text-gray-500">
+            Minimum password strength requirements
           </p>
           <select
-            :class="{
-              'w-full pl-4 py-2 rounded-md text-sm placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none shadow-sm transition-all duration-200': true,
-            }"
+            id="passwordPolicy"
+            class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2.5 px-3 border"
           >
-            <option value="weak">Weak</option>
-            <option value="medium">Medium</option>
-            <option value="strong">Strong</option>
+            <option value="weak">Basic (6+ characters)</option>
+            <option value="medium">Medium (8+ chars with mix)</option>
+            <option value="strong">Strong (12+ chars with complexity)</option>
           </select>
         </div>
-
-        <!-- Multi-Factor Authentication -->
-        <div class="w-1/2 flex flex-col">
-          <p class="text-xl tracking-wide font-medium">
-            Multi-Factor Authentication
-          </p>
-          <p class="text-sm tracking-wide text-neutral-500">
-            Enable or disable MFA for enhanced account security
+        <div>
+          <label for="mfa" class="block text-sm font-medium text-gray-700"
+            >Multi-Factor Authentication</label
+          >
+          <p class="mt-1 text-sm text-gray-500">
+            Add an extra layer of security
           </p>
           <select
-            :class="{
-              'w-full pl-4 py-2 rounded-md text-sm placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none shadow-sm transition-all duration-200': true,
-            }"
+            id="mfa"
+            class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2.5 px-3 border"
           >
-            <option value="enabled">Enabled</option>
+            <option value="enabled">Enabled (Recommended)</option>
             <option value="disabled">Disabled</option>
+            <option value="required">Required for all users</option>
           </select>
         </div>
       </div>
+    </div>
 
-      <!-- Session Timeout & Failed Login Attempts -->
-      <div class="flex gap-10 pt-6">
-        <!-- Session Timeout -->
-        <div class="w-1/2 flex flex-col">
-          <p class="text-xl tracking-wide font-medium">Session Timeout</p>
-          <p class="text-sm tracking-wide text-neutral-500">
-            Specify the time (in minutes) after which inactive users are logged
-            out
-          </p>
+    <!-- Session Settings -->
+    <div class="mt-10 space-y-6">
+      <div>
+        <h2 class="text-lg font-medium text-gray-900">Session Settings</h2>
+        <p class="mt-1 text-sm text-gray-500">
+          Control how user sessions are managed
+        </p>
+      </div>
+      <div class="border-t border-gray-200"></div>
+
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div>
+          <label
+            for="sessionTimeout"
+            class="block text-sm font-medium text-gray-700"
+            >Session Timeout (minutes)</label
+          >
+          <p class="mt-1 text-sm text-gray-500">Inactive time before logout</p>
           <input
             type="number"
-            placeholder="Enter timeout duration (e.g., 30)"
-            :class="{
-              'w-full pl-4 py-2 rounded-md text-sm placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none shadow-sm transition-all duration-200': true,
-            }"
+            id="sessionTimeout"
+            placeholder="e.g. 30"
+            class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2.5 px-3 border"
           />
         </div>
-
-        <!-- Failed Login Attempts -->
-        <div class="w-1/2 flex flex-col">
-          <p class="text-xl tracking-wide font-medium">Failed Login Attempts</p>
-          <p class="text-sm tracking-wide text-neutral-500">
-            Set the number of failed login attempts before the account is locked
-          </p>
+        <div>
+          <label
+            for="failedAttempts"
+            class="block text-sm font-medium text-gray-700"
+            >Failed Login Attempts</label
+          >
+          <p class="mt-1 text-sm text-gray-500">Before account is locked</p>
           <input
             type="number"
-            placeholder="Enter maximum attempts (e.g., 5)"
-            :class="{
-              'w-full pl-4 py-2 rounded-md text-sm placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none shadow-sm transition-all duration-200': true,
-            }"
+            id="failedAttempts"
+            placeholder="e.g. 5"
+            class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2.5 px-3 border"
           />
         </div>
       </div>
+    </div>
 
-      <!-- IP Whitelisting & Security Logs -->
-      <div class="flex gap-10 pt-6">
-        <!-- IP Whitelisting -->
-        <div class="w-1/2 flex flex-col">
-          <p class="text-xl tracking-wide font-medium">IP Whitelisting</p>
-          <p class="text-sm tracking-wide text-neutral-500">
-            Restrict access to specific IP addresses for additional security
+    <!-- Advanced Security -->
+    <div class="mt-10 space-y-6">
+      <div>
+        <h2 class="text-lg font-medium text-gray-900">Advanced Security</h2>
+        <p class="mt-1 text-sm text-gray-500">
+          Additional security measures for your system
+        </p>
+      </div>
+      <div class="border-t border-gray-200"></div>
+
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div>
+          <label
+            for="ipWhitelist"
+            class="block text-sm font-medium text-gray-700"
+            >IP Whitelisting</label
+          >
+          <p class="mt-1 text-sm text-gray-500">
+            Restrict access to specific IPs
           </p>
           <textarea
+            id="ipWhitelist"
             rows="3"
-            placeholder="Enter IP addresses, one per line"
-            :class="{
-              'w-full pl-4 py-2 rounded-md text-sm placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none shadow-sm transition-all duration-200': true,
-            }"
+            placeholder="Enter one IP per line"
+            class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2.5 px-3 border"
           ></textarea>
         </div>
-
-        <!-- Security Logs -->
-        <div class="w-1/2 flex flex-col">
-          <p class="text-xl tracking-wide font-medium">Security Logs</p>
-          <p class="text-sm tracking-wide text-neutral-500">
-            Enable or disable logging for security-related events
+        <div>
+          <label
+            for="securityLogs"
+            class="block text-sm font-medium text-gray-700"
+            >Security Logging</label
+          >
+          <p class="mt-1 text-sm text-gray-500">
+            Record security-related events
           </p>
           <select
-            :class="{
-              'w-full pl-4 py-2 rounded-md text-sm placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none shadow-sm transition-all duration-200': true,
-            }"
+            id="securityLogs"
+            class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2.5 px-3 border"
           >
-            <option value="enabled">Enabled</option>
+            <option value="enabled">Enabled (Recommended)</option>
             <option value="disabled">Disabled</option>
+            <option value="extended">Extended (Detailed logging)</option>
           </select>
+          <div class="mt-2 flex items-center">
+            <input
+              id="logRetention"
+              name="logRetention"
+              type="checkbox"
+              class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+            />
+            <label for="logRetention" class="ml-2 block text-sm text-gray-700">
+              Keep logs for 90 days
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Security Actions -->
+    <div class="mt-10 border-t border-gray-200 pt-6">
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div>
+          <h3 class="text-base font-medium text-gray-900">Danger Zone</h3>
+          <p class="mt-1 text-sm text-gray-500">
+            These actions are irreversible
+          </p>
+        </div>
+        <div class="flex justify-end">
+          <button
+            type="button"
+            class="inline-flex items-center px-4 py-2 border border-red-300 text-sm font-medium rounded-md shadow-sm text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+          >
+            Terminate All Active Sessions
+          </button>
         </div>
       </div>
     </div>
@@ -111,5 +172,5 @@
 </template>
 
 <script setup>
-// Add any reactive states or methods if needed here
+// Add any reactive states or methods here if needed
 </script>

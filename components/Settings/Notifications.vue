@@ -1,122 +1,209 @@
 <template>
-  <div class="px-20">
-    <div class="px-6 py-4">
-      <!-- Email Notifications & Push Notifications -->
-      <div class="flex gap-10 pt-4">
-        <!-- Email Notifications -->
-        <div class="w-1/2 flex flex-col">
-          <p class="text-xl tracking-wide font-medium">Email Notifications</p>
-          <p class="text-sm tracking-wide text-neutral-500">
-            Enable or disable email notifications for system updates, file
-            changes, and more
+  <div class="px-4 sm:px-6 lg:px-8">
+    <!-- Notification Channels -->
+    <div class="space-y-6">
+      <div>
+        <h2 class="text-lg font-medium text-gray-900">Notification Channels</h2>
+        <p class="mt-1 text-sm text-gray-500">
+          Configure how you receive notifications from the system
+        </p>
+      </div>
+      <div class="border-t border-gray-200"></div>
+
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div>
+          <label
+            for="emailNotifications"
+            class="block text-sm font-medium text-gray-700"
+            >Email Notifications</label
+          >
+          <p class="mt-1 text-sm text-gray-500">
+            System updates, file changes, etc.
           </p>
           <select
-            :class="{
-              'w-full pl-4 py-2 rounded-md text-sm placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none shadow-sm transition-all duration-200': true,
-            }"
+            id="emailNotifications"
+            class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2.5 px-3 border"
           >
             <option value="enabled">Enabled</option>
             <option value="disabled">Disabled</option>
           </select>
         </div>
-
-        <!-- Push Notifications -->
-        <div class="w-1/2 flex flex-col">
-          <p class="text-xl tracking-wide font-medium">Push Notifications</p>
-          <p class="text-sm tracking-wide text-neutral-500">
-            Turn on/off push notifications for file uploads, downloads, or
-            system warnings
+        <div>
+          <label
+            for="pushNotifications"
+            class="block text-sm font-medium text-gray-700"
+            >Push Notifications</label
+          >
+          <p class="mt-1 text-sm text-gray-500">
+            File uploads, downloads, warnings
           </p>
           <select
-            :class="{
-              'w-full pl-4 py-2 rounded-md text-sm placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none shadow-sm transition-all duration-200': true,
-            }"
+            id="pushNotifications"
+            class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2.5 px-3 border"
           >
             <option value="enabled">Enabled</option>
             <option value="disabled">Disabled</option>
           </select>
         </div>
       </div>
+    </div>
 
-      <!-- File Activity Notifications & Daily Summary Emails -->
-      <div class="flex gap-10 pt-6">
-        <!-- File Activity Notifications -->
-        <div class="w-1/2 flex flex-col">
-          <p class="text-xl tracking-wide font-medium">
-            File Activity Notifications
-          </p>
-          <p class="text-sm tracking-wide text-neutral-500">
-            Notify about file uploads, deletions, or changes
-          </p>
+    <!-- Activity Notifications -->
+    <div class="mt-10 space-y-6">
+      <div>
+        <h2 class="text-lg font-medium text-gray-900">
+          Activity Notifications
+        </h2>
+        <p class="mt-1 text-sm text-gray-500">
+          Control which file activities trigger notifications
+        </p>
+      </div>
+      <div class="border-t border-gray-200"></div>
+
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div>
+          <label
+            for="fileActivity"
+            class="block text-sm font-medium text-gray-700"
+            >File Activity</label
+          >
+          <p class="mt-1 text-sm text-gray-500">Uploads, deletions, changes</p>
           <select
-            :class="{
-              'w-full pl-4 py-2 rounded-md text-sm placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none shadow-sm transition-all duration-200': true,
-            }"
+            id="fileActivity"
+            class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2.5 px-3 border"
           >
             <option value="all">All Activity</option>
             <option value="important">Important Only</option>
             <option value="none">None</option>
           </select>
         </div>
-
-        <!-- Daily Summary Emails -->
-        <div class="w-1/2 flex flex-col">
-          <p class="text-xl tracking-wide font-medium">Daily Summary Emails</p>
-          <p class="text-sm tracking-wide text-neutral-500">
-            Receive a daily email summarizing recent activity in your account
-          </p>
+        <div>
+          <label
+            for="dailySummary"
+            class="block text-sm font-medium text-gray-700"
+            >Daily Summary Email</label
+          >
+          <p class="mt-1 text-sm text-gray-500">Account activity recap</p>
           <select
-            :class="{
-              'w-full pl-4 py-2 rounded-md text-sm placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none shadow-sm transition-all duration-200': true,
-            }"
+            id="dailySummary"
+            class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2.5 px-3 border"
           >
             <option value="enabled">Enabled</option>
             <option value="disabled">Disabled</option>
           </select>
         </div>
       </div>
+    </div>
 
-      <!-- Alerts & Custom Notification Preferences -->
-      <div class="flex gap-10 pt-6">
-        <!-- Alerts -->
-        <div class="w-1/2 flex flex-col">
-          <p class="text-xl tracking-wide font-medium">Alerts</p>
-          <p class="text-sm tracking-wide text-neutral-500">
-            Choose which alerts to receive (e.g., system outages, failed
-            uploads)
+    <!-- Alert Settings -->
+    <div class="mt-10 space-y-6">
+      <div>
+        <h2 class="text-lg font-medium text-gray-900">Alert Settings</h2>
+        <p class="mt-1 text-sm text-gray-500">
+          Configure system alerts and custom notifications
+        </p>
+      </div>
+      <div class="border-t border-gray-200"></div>
+
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div>
+          <label
+            for="alertLevel"
+            class="block text-sm font-medium text-gray-700"
+            >Alert Level</label
+          >
+          <p class="mt-1 text-sm text-gray-500">
+            System outages, failed uploads
           </p>
           <select
-            :class="{
-              'w-full pl-4 py-2 rounded-md text-sm placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none shadow-sm transition-all duration-200': true,
-            }"
+            id="alertLevel"
+            class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2.5 px-3 border"
           >
             <option value="all">All Alerts</option>
             <option value="critical">Critical Only</option>
             <option value="none">None</option>
           </select>
         </div>
-
-        <!-- Custom Notification Preferences -->
-        <div class="w-1/2 flex flex-col">
-          <p class="text-xl tracking-wide font-medium">
-            Custom Notification Preferences
-          </p>
-          <p class="text-sm tracking-wide text-neutral-500">
-            Set custom preferences for specific events or actions
-          </p>
+        <div>
+          <label
+            for="customPreferences"
+            class="block text-sm font-medium text-gray-700"
+            >Custom Preferences</label
+          >
+          <p class="mt-1 text-sm text-gray-500">Specific events or actions</p>
           <textarea
+            id="customPreferences"
             rows="3"
-            placeholder="Specify your preferences, e.g., 'Notify for large file uploads'"
-            :class="{
-              'w-full pl-4 py-2 rounded-md text-sm placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none shadow-sm transition-all duration-200': true,
-            }"
+            placeholder="Example: 'Notify for files larger than 50MB'"
+            class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2.5 px-3 border"
           ></textarea>
         </div>
       </div>
+    </div>
+
+    <!-- Notification Schedule -->
+    <div class="mt-10 space-y-6">
+      <div>
+        <h2 class="text-lg font-medium text-gray-900">Notification Schedule</h2>
+        <p class="mt-1 text-sm text-gray-500">
+          Set times when you want to receive notifications
+        </p>
+      </div>
+      <div class="border-t border-gray-200"></div>
+
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div>
+          <label
+            for="quietHoursStart"
+            class="block text-sm font-medium text-gray-700"
+            >Quiet Hours Start</label
+          >
+          <p class="mt-1 text-sm text-gray-500">When to pause notifications</p>
+          <input
+            type="time"
+            id="quietHoursStart"
+            class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2.5 px-3 border"
+          />
+        </div>
+        <div>
+          <label
+            for="quietHoursEnd"
+            class="block text-sm font-medium text-gray-700"
+            >Quiet Hours End</label
+          >
+          <p class="mt-1 text-sm text-gray-500">When to resume notifications</p>
+          <input
+            type="time"
+            id="quietHoursEnd"
+            class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2.5 px-3 border"
+          />
+        </div>
+      </div>
+      <div class="flex items-center">
+        <input
+          id="weekendsEnabled"
+          name="weekendsEnabled"
+          type="checkbox"
+          class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+        />
+        <label for="weekendsEnabled" class="ml-2 block text-sm text-gray-700">
+          Pause all notifications on weekends
+        </label>
+      </div>
+    </div>
+
+    <!-- Save Button -->
+    <div class="mt-10 flex justify-end">
+      <button
+        type="button"
+        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+      >
+        Save Notification Preferences
+      </button>
     </div>
   </div>
 </template>
 
 <script setup>
-// Add any reactive states or methods if needed here
+// Add any reactive states or methods here if needed
 </script>

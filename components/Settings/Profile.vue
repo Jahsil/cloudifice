@@ -1,189 +1,264 @@
 <template>
-  <div class="px-20">
-    <div class="pt-4">
-      <p class="font-medium tracking-wide">Account</p>
-
-      <p class="text-sm tracking-wide text-neutral-500 pt-1">
-        Real-time information and activities
-      </p>
-      <div class="mt-4 border border-neutral-200"></div>
-    </div>
-
-    <!-- Account Image  -->
-
-    <div class="py-8 flex items-center justify-between gap-4">
-      <div class="flex items-center gap-4">
-        <div
-          v-if="profileImage"
-          class="relative w-24 h-24 rounded-full bg-slate-200"
-        >
-          <img
-            :src="profileImage"
-            alt="Profile Image"
-            class="w-24 h-24 rounded-full object-cover"
-          />
-        </div>
-        <div
-          v-if="auth.user.profile_image_url && !profileImage"
-          class="relative w-24 h-24 rounded-full bg-slate-200"
-        >
-          <img
-            :src="auth.user.profile_image"
-            alt="Profile Image"
-            class="w-24 h-24 rounded-full object-cover"
-          />
-        </div>
-
-        <div
-          v-if="!auth.user.profile_image_url && !profileImage"
-          class="relative w-24 h-24 rounded-full bg-slate-200"
-        >
-          <div class="absolute left-9 top-6">
-            <p class="text-5xl text-slate-500">E</p>
-          </div>
-        </div>
-
-        <div class="flex flex-col gap-0">
-          <p class="font-medium">Profile picture</p>
-          <p class="text-sm text-[#6e7383]">PNG, JPEG under 15MB</p>
-          <div v-if="progress" class="mt-4 w-full">
-            <ProgressBar :amount="progress" />
-          </div>
-        </div>
+  <div class="px-4 sm:px-6 lg:px-8">
+    <!-- Account Section -->
+    <div class="space-y-6">
+      <div>
+        <h2 class="text-lg font-medium text-gray-900">Account</h2>
+        <p class="mt-1 text-sm text-gray-500">
+          Real-time information and activities
+        </p>
       </div>
+      <div class="border-t border-gray-200"></div>
 
-      <input
-        type="file"
-        ref="fileInput"
-        class="hidden"
-        @change="handleFileChange"
-      />
-
-      <div class="flex gap-2">
-        <button
-          @click="triggerFileUpload"
-          class="border border-neutral-300 px-2 py-2 text-sm rounded-lg shadow-sm shadow-slate-200 font-medium tracking-tight"
-        >
-          Upload new picture
-        </button>
-        <button
-          class="border border-neutral-300 px-2 py-2 text-sm rounded-lg bg-[#f4f8fb] font-medium tracking-tight"
-        >
-          Delete
-        </button>
-      </div>
-    </div>
-
-    <!-- Info  -->
-    <div>
-      <p class="text-xl tracking-wide font-medium">Full name</p>
-      <div class="flex gap-10 pt-4">
-        <!-- Email  -->
-        <div class="w-1/2 flex flex-col">
-          <label class="text-sm" for="email">First name</label>
-
-          <input
-            type="text"
-            placeholder="Enter first name"
-            :class="{
-              'w-full pl-4 py-2  rounded-md text-sm placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none shadow-sm transition-all duration-200': true,
-            }"
-          />
-        </div>
-        <!-- Password  -->
-        <div class="w-1/2 flex flex-col">
-          <label class="text-sm" for="email">Last Name</label>
-
-          <input
-            type="text"
-            placeholder="Enter last name"
-            :class="{
-              'w-full pl-4 py-2  rounded-md text-sm placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none shadow-sm transition-all duration-200': true,
-            }"
-          />
-        </div>
-      </div>
-
-      <!-- email  -->
-      <p class="text-xl tracking-wide font-medium pt-4">Contact email</p>
-      <p class="text-sm tracking-wide text-neutral-500 pt-1">
-        Manage your accounts email address
-      </p>
-
-      <div class="flex gap-10 pt-2">
-        <!-- Email  -->
-
-        <div class="w-1/2 flex flex-col">
-          <label class="text-sm" for="email">Email</label>
-
-          <input
-            type="text"
-            placeholder="Enter email"
-            :class="{
-              'w-full pl-4 py-2  rounded-md text-sm placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none shadow-sm transition-all duration-200': true,
-            }"
-          />
-        </div>
-      </div>
-
-      <!-- password  -->
-      <p class="text-xl tracking-wide font-medium pt-4">Password</p>
-      <p class="text-sm tracking-wide text-neutral-500 pt-1">
-        Modify your current password
-      </p>
-
-      <div class="flex gap-10 pt-4">
-        <!-- Email  -->
-        <div class="w-1/2 flex flex-col">
-          <label class="text-sm" for="email">First name</label>
-
-          <input
-            type="text"
-            placeholder="Enter first name"
-            :class="{
-              'w-full pl-4 py-2  rounded-md text-sm placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none shadow-sm transition-all duration-200': true,
-            }"
-          />
-        </div>
-        <!-- Password  -->
-        <div class="w-1/2 flex flex-col">
-          <label class="text-sm" for="email">Last Name</label>
-
-          <input
-            type="text"
-            placeholder="Enter last name"
-            :class="{
-              'w-full pl-4 py-2  rounded-md text-sm placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:outline-none shadow-sm transition-all duration-200': true,
-            }"
-          />
-        </div>
-      </div>
-
-      <p class="text-xl tracking-wide font-medium pt-4">Integrated Account</p>
-      <p class="text-sm tracking-wide text-neutral-500 pt-1">
-        Manage your current integrated accounts
-      </p>
-
-      <!-- google sign in  -->
-
+      <!-- Profile Picture -->
       <div
-        class="flex justify-between items-center border border-neutral-300 rounded-xl shadow-sm px-4 py-2 mt-2"
+        class="flex flex-col sm:flex-row sm:items-center justify-between gap-6"
       >
         <div class="flex items-center gap-4">
-          <img class="h-8 w-8" src="/public/google.png" alt="google-logo" />
-          <div class="flex flex-col">
-            <p class="text-lg tracking-wide">Google</p>
-            <p class="text-sm tracking-wide text-neutral-500">
-              Manage you google account
-            </p>
+          <!-- Profile Image -->
+          <div class="relative group">
+            <div class="w-24 h-24 rounded-full overflow-hidden bg-gray-200">
+              <img
+                v-if="profileImage"
+                :src="profileImage"
+                alt="Profile Image"
+                class="w-full h-full object-cover"
+              />
+              <img
+                v-else-if="auth.user.profile_image_url"
+                :src="auth.user.profile_image"
+                alt="Profile Image"
+                class="w-full h-full object-cover"
+              />
+              <div
+                v-else
+                class="w-full h-full flex items-center justify-center"
+              >
+                <span class="text-4xl font-medium text-gray-500">
+                  {{
+                    auth.user.name
+                      ? auth.user.name.charAt(0).toUpperCase()
+                      : 'E'
+                  }}
+                </span>
+              </div>
+            </div>
+            <div
+              class="absolute inset-0 bg-black bg-opacity-30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center"
+            >
+              <CameraIcon class="h-6 w-6 text-white" />
+            </div>
+          </div>
+
+          <div class="space-y-1">
+            <h3 class="font-medium text-gray-900">Profile picture</h3>
+            <p class="text-sm text-gray-500">PNG, JPEG under 15MB</p>
+            <div v-if="progress" class="w-48 mt-2">
+              <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div
+                  class="h-full bg-indigo-600 rounded-full transition-all duration-300"
+                  :style="{ width: progress + '%' }"
+                ></div>
+              </div>
+              <p class="text-xs text-gray-500 mt-1">{{ progress }}% uploaded</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-3">
+          <input
+            type="file"
+            ref="fileInput"
+            class="hidden"
+            accept="image/*"
+            @change="handleFileChange"
+          />
+          <button
+            @click="triggerFileUpload"
+            class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            <ArrowUpTrayIcon class="-ml-1 mr-2 h-5 w-5 text-gray-500" />
+            Upload new
+          </button>
+          <button
+            @click="removeProfileImage"
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+          >
+            <TrashIcon class="-ml-1 mr-2 h-5 w-5 text-gray-500" />
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Personal Information -->
+    <div class="mt-10 space-y-6">
+      <div>
+        <h2 class="text-lg font-medium text-gray-900">Personal Information</h2>
+        <p class="mt-1 text-sm text-gray-500">Update your personal details</p>
+      </div>
+      <div class="border-t border-gray-200"></div>
+
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div>
+          <label for="firstName" class="block text-sm font-medium text-gray-700"
+            >First name</label
+          >
+          <input
+            type="text"
+            id="firstName"
+            :value="auth.user.first_name || ''"
+            placeholder="Enter first name"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2.5 px-3 border"
+          />
+        </div>
+        <div>
+          <label for="lastName" class="block text-sm font-medium text-gray-700"
+            >Last name</label
+          >
+          <input
+            type="text"
+            id="lastName"
+            :value="auth.user.last_name || ''"
+            placeholder="Enter last name"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2.5 px-3 border"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Information -->
+    <div class="mt-10 space-y-6">
+      <div>
+        <h2 class="text-lg font-medium text-gray-900">Contact Information</h2>
+        <p class="mt-1 text-sm text-gray-500">
+          Manage your account's email address
+        </p>
+      </div>
+      <div class="border-t border-gray-200"></div>
+
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div class="sm:col-span-2">
+          <label for="email" class="block text-sm font-medium text-gray-700"
+            >Email address</label
+          >
+          <input
+            type="email"
+            id="email"
+            :value="auth.user.email || ''"
+            placeholder="Enter email"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2.5 px-3 border"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="mt-10 space-y-6">
+      <div>
+        <h2 class="text-lg font-medium text-gray-900">Password</h2>
+        <p class="mt-1 text-sm text-gray-500">Modify your current password</p>
+      </div>
+      <div class="border-t border-gray-200"></div>
+
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div>
+          <label
+            for="currentPassword"
+            class="block text-sm font-medium text-gray-700"
+            >Current password</label
+          >
+          <div class="relative mt-1">
+            <input
+              type="password"
+              id="currentPassword"
+              placeholder="Enter current password"
+              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2.5 px-3 border pr-10"
+            />
+            <button
+              type="button"
+              class="absolute inset-y-0 right-0 flex items-center pr-3"
+            >
+              <EyeIcon class="h-5 w-5 text-gray-400 hover:text-gray-500" />
+            </button>
           </div>
         </div>
         <div>
-          <button
-            class="px-2 py-1 border border-[#2f8366] shadow-inner rounded-lg text-[#2f8366]"
+          <label
+            for="newPassword"
+            class="block text-sm font-medium text-gray-700"
+            >New password</label
           >
-            <span class="font-medium">Connected</span>
-          </button>
+          <div class="relative mt-1">
+            <input
+              type="password"
+              id="newPassword"
+              placeholder="Enter new password"
+              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2.5 px-3 border pr-10"
+            />
+            <button
+              type="button"
+              class="absolute inset-y-0 right-0 flex items-center pr-3"
+            >
+              <EyeIcon class="h-5 w-5 text-gray-400 hover:text-gray-500" />
+            </button>
+          </div>
+        </div>
+        <div>
+          <label
+            for="confirmPassword"
+            class="block text-sm font-medium text-gray-700"
+            >Confirm password</label
+          >
+          <div class="relative mt-1">
+            <input
+              type="password"
+              id="confirmPassword"
+              placeholder="Confirm new password"
+              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2.5 px-3 border pr-10"
+            />
+            <button
+              type="button"
+              class="absolute inset-y-0 right-0 flex items-center pr-3"
+            >
+              <EyeIcon class="h-5 w-5 text-gray-400 hover:text-gray-500" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Connected Accounts -->
+    <div class="mt-10 space-y-6">
+      <div>
+        <h2 class="text-lg font-medium text-gray-900">Connected Accounts</h2>
+        <p class="mt-1 text-sm text-gray-500">
+          Manage your current integrated accounts
+        </p>
+      </div>
+      <div class="border-t border-gray-200"></div>
+
+      <div class="space-y-4">
+        <!-- Google Account -->
+        <div
+          class="flex items-center justify-between rounded-lg border border-gray-200 p-4"
+        >
+          <div class="flex items-center space-x-4">
+            <div class="flex-shrink-0">
+              <img class="h-10 w-10" src="/google.png" alt="Google logo" />
+            </div>
+            <div>
+              <h3 class="text-base font-medium text-gray-900">Google</h3>
+              <p class="text-sm text-gray-500">Manage your Google account</p>
+            </div>
+          </div>
+          <div>
+            <span
+              class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800"
+            >
+              Connected
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -191,22 +266,26 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-const { $axios } = useNuxtApp();
-import { useAuthStore } from "@/stores/auth";
+import { ref } from 'vue';
+import {
+  CameraIcon,
+  ArrowUpTrayIcon,
+  TrashIcon,
+  EyeIcon,
+} from '@heroicons/vue/24/outline';
+import { useAuthStore } from '@/stores/auth';
 
 const auth = useAuthStore();
-
 const fileInput = ref(null);
 const file = ref(null);
 const progress = ref(null);
 const token = ref(null);
 const profileImage = ref(null);
 
-const auth_token = useCookie("auth_token", {
-  secure: false, // Ensures it only works on HTTPS
-  httpOnly: false, // Since we need JavaScript access
-  sameSite: "lax",
+const auth_token = useCookie('auth_token', {
+  secure: false,
+  httpOnly: false,
+  sameSite: 'lax',
 });
 
 token.value = auth_token.value;
@@ -215,50 +294,48 @@ const triggerFileUpload = () => {
   fileInput.value.click();
 };
 
-function removeFile() {
-  fileInput.value = null;
-  file.value = null;
-}
+const removeProfileImage = () => {
+  profileImage.value = null;
+  // Add API call to remove profile image from backend
+};
 
-const handleFileChange = async () => {
+const handleFileChange = async (event) => {
   file.value = event.target.files[0];
-  console.log("🚀 ~ handleFileChange ~ file.value:", file.value);
   if (file.value) {
     await uploadProfilePhoto();
-
-    // Add file processing logic here
   }
 };
 
 const uploadProfilePhoto = async () => {
   if (!file.value) {
-    alert("Please select a file.");
+    alert('Please select a file.');
     return;
   }
 
-  let uploadedBytesTotal = 0; // Track total uploaded bytes
+  let uploadedBytesTotal = 0;
 
   try {
     const formData = new FormData();
-    formData.append("profile_image", file.value);
+    formData.append('profile_image', file.value);
 
-    const response = await $axios.post("file/upload-profile", formData, {
+    const response = await $axios.post('file/upload-profile', formData, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
       },
       onUploadProgress: (progressEvent) => {
-        uploadedBytesTotal += progressEvent.loaded; // Accumulate bytes uploaded
+        uploadedBytesTotal += progressEvent.loaded;
         const percentCompleted = Math.round(
-          (uploadedBytesTotal / file.value.size) * 100
+          (uploadedBytesTotal / file.value.size) * 100,
         );
-        progress.value = percentCompleted; // Update progress dynamically
+        progress.value = percentCompleted;
       },
     });
 
     profileImage.value = response.data.profile_image;
+    auth.user.profile_image = response.data.profile_image;
   } catch (error) {
-    console.log("🚀 ~ uploadProfilePhoto ~ error:", error);
+    console.error('Error uploading profile photo:', error);
   } finally {
     progress.value = null;
     fileInput.value = null;
@@ -266,5 +343,3 @@ const uploadProfilePhoto = async () => {
   }
 };
 </script>
-
-<style lang="scss" scoped></style>
