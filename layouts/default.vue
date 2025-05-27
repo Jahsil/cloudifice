@@ -316,12 +316,15 @@
       <main class="flex-1 overflow-auto p-4 bg-gray-50">
         <slot />
       </main>
+
+      <Toast />
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+import Toast from '~/components/Toast.vue';
 
 const auth = useAuthStore();
 const ui = useUIStore();
