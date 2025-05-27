@@ -1,12 +1,10 @@
 <template>
-  <div>
-    <div
-      class="fixed top-[50%] left-[50%] p-4 border-[3px] w-8 border-sky-400 rounded-lg box"
-    ></div>
-  </div>
+  <div></div>
 </template>
 
-<script setup></script>
+<script setup>
+const { success, error } = useToast();
+</script>
 
 <style scoped>
 .box {

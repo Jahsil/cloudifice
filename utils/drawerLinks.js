@@ -1,8 +1,8 @@
 export const mainLinks = [
   {
     id: 1,
-    name: "Home",
-    path: "/home",
+    name: 'Home',
+    path: '/home',
     image: ` <g
                   fill="none"
                   stroke="currentColor"
@@ -19,8 +19,8 @@ export const mainLinks = [
   },
   {
     id: 2,
-    name: "Computer",
-    path: "/computer",
+    name: 'Computer',
+    path: '/computer',
     image: ` <path
                   fill="none"
                   stroke="currentColor"
@@ -33,8 +33,8 @@ export const mainLinks = [
   },
   {
     id: 3,
-    name: "Insights",
-    path: "/notes",
+    name: 'Insights',
+    path: '/notes',
     image: ` <g
     fill="none"
     stroke="currentColor"
@@ -49,8 +49,8 @@ export const mainLinks = [
   },
   {
     id: 4,
-    name: "Archive",
-    path: "/archive",
+    name: 'Archive',
+    path: '/archive',
     image: ` <g
                   fill="none"
                   stroke="currentColor"
@@ -67,8 +67,8 @@ export const mainLinks = [
   },
   {
     id: 5,
-    name: "Trash",
-    path: "/trash",
+    name: 'Trash',
+    path: '/trash',
     image: ` <path
                   fill="none"
                   stroke="currentColor"
@@ -86,8 +86,8 @@ export const mainLinks = [
 export const personalLinks = [
   {
     id: 6,
-    name: "Inbox",
-    path: "/school-collections",
+    name: 'Inbox',
+    path: '/chats',
     image: ` <g
     fill="none"
     stroke="currentColor"
@@ -102,8 +102,8 @@ export const personalLinks = [
   },
   {
     id: 7,
-    name: "Group Chats",
-    path: "/personal-collections",
+    name: 'Group Chats',
+    path: '/groupchats',
     image: ` <path
     fill="none"
     stroke="currentColor"
@@ -119,8 +119,8 @@ export const personalLinks = [
 export const workplaceLinks = [
   {
     id: 8,
-    name: "Received Files",
-    path: "/telecom-collections",
+    name: 'Received Files',
+    path: '/telecom-collections',
     image: `   <g
     fill="none"
     stroke="currentColor"
@@ -135,8 +135,8 @@ export const workplaceLinks = [
   },
   {
     id: 9,
-    name: "Public Files",
-    path: "/unicorn-collections",
+    name: 'Public Files',
+    path: '/unicorn-collections',
     image: `  <path
     fill="none"
     stroke="currentColor"
@@ -152,8 +152,8 @@ export const workplaceLinks = [
 export const helpLinks = [
   {
     id: 10,
-    name: "Help Center",
-    path: "/help-center",
+    name: 'Help Center',
+    path: '/help-center',
     image: `<g
                             fill="none"
                             stroke="currentColor"
@@ -172,8 +172,8 @@ export const helpLinks = [
   },
   {
     id: 11,
-    name: "Settings",
-    path: "/settings",
+    name: 'Settings',
+    path: '/settings',
     image: ` <g
                             fill="none"
                             stroke="currentColor"
