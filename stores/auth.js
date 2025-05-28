@@ -17,6 +17,7 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     async ensureCsrfToken() {
       const csrfToken = useCookie('XSRF-TOKEN');
+      console.log('🚀 ~ ensureCsrfToken ~ csrfToken:', csrfToken);
       if (!csrfToken.value) {
         const config = useRuntimeConfig();
         await axios.get(
@@ -44,7 +45,7 @@ export const useAuthStore = defineStore('auth', {
             withCredentials: true,
             headers: {
               'X-XSRF-TOKEN': decodeURIComponent(
-                useCookie('XSRF-TOKEN').value || '',
+                useCookie('XSRF-TOKEN').value || 'test',
               ),
             },
           },
