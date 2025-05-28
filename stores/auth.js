@@ -1,9 +1,6 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 
-axios.defaults.withCredentials = true;
-// axios.defaults.withXSRFToken = true;
-
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null,
@@ -12,41 +9,52 @@ export const useAuthStore = defineStore('auth', {
   }),
 
   getters: {
-    isAuthenticated: (state) => {
-      console.log('Getter isAuthenticated called:', state.user);
-      return !!state.user;
-    },
+    isAuthenticated: (state) => !!state.user,
     isLoading: (state) => state.loading,
     isError: (state) => state.error,
   },
 
   actions: {
-    async login(email, password) {
-      const config = useRuntimeConfig();
-      const apiBase = config.public.apiBase;
-      const brodcastApiBase = config.public.brodcastApiBase;
-
-      this.loading = true;
-      this.error = null;
-      try {
-        await axios.get(`${brodcastApiBase}/sanctum/csrf-cookie`, {
-          withCredentials: true,
-          credentials: true,
-        });
-        const response = await axios.post(
-          `${apiBase}/auth/login`,
-          {
-            email,
-            password,
-          },
+    async ensureCsrfToken() {
+      const csrfToken = useCookie('XSRF-TOKEN');
+      if (!csrfToken.value) {
+        const config = useRuntimeConfig();
+        await axios.get(
+          `${config.public.brodcastApiBase}/sanctum/csrf-cookie`,
           {
             withCredentials: true,
-            credentials: true,
           },
         );
+      }
+    },
+
+    async login(email, password) {
+      const config = useRuntimeConfig();
+      this.loading = true;
+      this.error = null;
+
+      try {
+        // Ensure CSRF token is set before login
+        await this.ensureCsrfToken();
+
+        const response = await axios.post(
+          `${config.public.apiBase}/auth/login`,
+          { email, password },
+          {
+            withCredentials: true,
+            headers: {
+              'X-XSRF-TOKEN': decodeURIComponent(
+                useCookie('XSRF-TOKEN').value || '',
+              ),
+            },
+          },
+        );
+
         await this.getUser();
+        return response.data;
       } catch (err) {
         this.error = err.response?.data?.error || 'Login failed';
+        throw err;
       } finally {
         this.loading = false;
       }
@@ -54,43 +62,49 @@ export const useAuthStore = defineStore('auth', {
 
     async getUser() {
       const config = useRuntimeConfig();
-      const apiBase = config.public.apiBase;
-
-      const token = useCookie('auth_token');
-      const decodedToken = decodeURIComponent(token.value);
-
       try {
-        const response = await axios.get(`${apiBase}/auth/user`, {
+        const response = await axios.get(`${config.public.apiBase}/auth/user`, {
           withCredentials: true,
-          // headers: {
-          //   "Content-Type": "application/json",
-          //   Authorization: `Bearer ${decodedToken}`,
-          // },
+          headers: {
+            'X-XSRF-TOKEN': decodeURIComponent(
+              useCookie('XSRF-TOKEN').value || '',
+            ),
+          },
         });
-        if (response.status !== 200) {
-          this.user = null;
-        }
         this.user = response.data;
-      } catch {
+        return this.user;
+      } catch (error) {
         this.user = null;
+        throw error;
       }
     },
 
     async logout() {
       const config = useRuntimeConfig();
-      const apiBase = config.public.apiBase;
       try {
         const response = await axios.post(
-          `${apiBase}/auth/logout`,
+          `${config.public.apiBase}/auth/logout`,
           {},
-          { withCredentials: true, credentials: true },
+          {
+            withCredentials: true,
+            headers: {
+              'X-XSRF-TOKEN': decodeURIComponent(
+                useCookie('XSRF-TOKEN').value || '',
+              ),
+            },
+          },
         );
-        console.log('🚀 ~ logout ~ response:', response);
+
         if (response.data.status === 'OK') {
           this.user = null;
+          // Clear auth token cookie
+          const authToken = useCookie('auth_token');
+          authToken.value = null;
         }
+        return response.data;
       } catch (error) {
-        console.log('🚀 ~ logout ~ error:', error);
+        console.error('Logout error:', error);
+        throw error;
       }
     },
   },
