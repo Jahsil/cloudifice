@@ -1,10 +1,10 @@
-import { defineStore } from "pinia";
-import axios from "axios";
+import { defineStore } from 'pinia';
+import axios from 'axios';
 
 axios.defaults.withCredentials = true;
-axios.defaults.withXSRFToken = true;
+// axios.defaults.withXSRFToken = true;
 
-export const useAuthStore = defineStore("auth", {
+export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null,
     loading: false,
@@ -13,7 +13,7 @@ export const useAuthStore = defineStore("auth", {
 
   getters: {
     isAuthenticated: (state) => {
-      console.log("Getter isAuthenticated called:", state.user);
+      console.log('Getter isAuthenticated called:', state.user);
       return !!state.user;
     },
     isLoading: (state) => state.loading,
@@ -42,11 +42,11 @@ export const useAuthStore = defineStore("auth", {
           {
             withCredentials: true,
             credentials: true,
-          }
+          },
         );
         await this.getUser();
       } catch (err) {
-        this.error = err.response?.data?.error || "Login failed";
+        this.error = err.response?.data?.error || 'Login failed';
       } finally {
         this.loading = false;
       }
@@ -56,7 +56,7 @@ export const useAuthStore = defineStore("auth", {
       const config = useRuntimeConfig();
       const apiBase = config.public.apiBase;
 
-      const token = useCookie("auth_token");
+      const token = useCookie('auth_token');
       const decodedToken = decodeURIComponent(token.value);
 
       try {
@@ -83,14 +83,14 @@ export const useAuthStore = defineStore("auth", {
         const response = await axios.post(
           `${apiBase}/auth/logout`,
           {},
-          { withCredentials: true, credentials: true }
+          { withCredentials: true, credentials: true },
         );
-        console.log("🚀 ~ logout ~ response:", response);
-        if (response.data.status === "OK") {
+        console.log('🚀 ~ logout ~ response:', response);
+        if (response.data.status === 'OK') {
           this.user = null;
         }
       } catch (error) {
-        console.log("🚀 ~ logout ~ error:", error);
+        console.log('🚀 ~ logout ~ error:', error);
       }
     },
   },

@@ -1,7 +1,7 @@
-import axios from "axios";
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 axios.defaults.withCredentials = true;
-axios.defaults.withXSRFToken = true;
 
 export default defineNuxtPlugin(() => {
   const config = useRuntimeConfig();
@@ -25,15 +25,13 @@ export default defineNuxtPlugin(() => {
   // Add a request interceptor
   axiosInstance.interceptors.request.use(
     (config) => {
-      // For example, add authorization token to headers
-      // config.headers.Authorization = `Bearer ${auth_token.value}`;
-      // console.log(
-      //   "🚀 ~ defineNuxtPlugin ~ config.headers.Authorization:",
-      //   config.headers.Authorization
-      // );
+      const xsrfToken = Cookies.get('XSRF-TOKEN');
+      if (xsrfToken) {
+        config.headers['X-XSRF-TOKEN'] = decodeURIComponent(xsrfToken);
+      }
       return config;
     },
-    (error) => Promise.reject(error)
+    (error) => Promise.reject(error),
   );
 
   // Add a response interceptor
@@ -41,9 +39,9 @@ export default defineNuxtPlugin(() => {
     (response) => response,
     (error) => {
       // Handle errors
-      console.error("Axios error:", error);
+      console.error('Axios error:', error);
       return Promise.reject(error);
-    }
+    },
   );
 
   const axiosTest = axios.create({
