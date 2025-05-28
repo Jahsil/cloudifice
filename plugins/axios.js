@@ -1,3 +1,4 @@
+import axios from 'axios';
 // plugins/api.ts
 export default defineNuxtPlugin(async (nuxtApp) => {
   const config = useRuntimeConfig();
@@ -12,7 +13,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   // Ensure CSRF cookie is set before first API call
   if (!csrfToken.value) {
     await $fetch('/sanctum/csrf-cookie', {
-      baseURL: config.public.apiBase,
+      baseURL: config.public.brodcastApiBase,
       credentials: 'include',
     });
     // Refresh the cookie reference after setting it
@@ -59,7 +60,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         // CSRF token mismatch
         // Refresh CSRF token
         await $fetch('/sanctum/csrf-cookie', {
-          baseURL: config.public.apiBase,
+          baseURL: config.public.brodcastApiBase,
           credentials: 'include',
         });
         csrfToken.value = useCookie('XSRF-TOKEN').value;
