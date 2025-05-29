@@ -477,7 +477,7 @@
 
             <div class="max-w-md">
               <div
-                class="px-4 py-3 rounded-2xl shadow-sm"
+                class="px-4 py-3 rounded-2xl shadow-sm break-words"
                 :class="{
                   'bg-blue-500 text-white rounded-br-md':
                     chat.sender_id === auth.user.id,
@@ -774,6 +774,12 @@ onMounted(async () => {
     nextTick(() => {
       scrollToBottom();
     });
+  });
+
+  const presenceChannel = $echo.join(`presence.online`);
+
+  presenceChannel.here((users) => {
+    console.log('🚀 ~ presenceChannel.here ~ users:', users);
   });
 });
 
