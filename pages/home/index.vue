@@ -123,14 +123,21 @@
     </div>
 
     <!-- Storage Overview Cards -->
-    <div class="bg-[#fafbfd] py-6 px-4">
+    <div
+      v-if="generalStats && generalStats.breakdown"
+      class="bg-[#fafbfd] py-6 px-4"
+    >
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <FileCard
           name="Image Files"
-          amount="20"
-          end-amount="120"
-          start-amount="10"
-          count="1200 Items"
+          :amount="
+            (generalStats.breakdown.images.size /
+              generalStats.storage_size?.[0]) *
+            100
+          "
+          :end-amount="formatFileSize(generalStats.storage_size?.[0])"
+          :start-amount="generalStats.breakdown.images.size_human"
+          :count="`${generalStats.breakdown.images.count} Items`"
           styles="text-red-600"
           :trend="{ value: 12, direction: 'up' }"
           icon='<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
@@ -143,10 +150,15 @@
 
         <FileCard
           name="Video Files"
-          amount="50"
-          end-amount="120"
-          start-amount="50"
-          count="700 Items"
+          :amount="
+            (generalStats.breakdown.videos.size /
+              generalStats.storage_size?.[0]) *
+              100 +
+            0.0000001
+          "
+          :end-amount="formatFileSize(generalStats.storage_size?.[0])"
+          :start-amount="generalStats.breakdown.videos.size_human"
+          :count="`${generalStats.breakdown.videos.count} Items`"
           styles="text-green-500"
           progress-bar-bg="#c5f3d1"
           progress-bar-fg="#35c75a"
@@ -159,10 +171,14 @@
 
         <FileCard
           name="Document Files"
-          amount="40"
-          end-amount="120"
-          start-amount="30"
-          count="800 Items"
+          :amount="
+            (generalStats.breakdown.documents.size /
+              generalStats.storage_size?.[0]) *
+            100
+          "
+          :end-amount="formatFileSize(generalStats.storage_size?.[0])"
+          :start-amount="generalStats.breakdown.documents.size_human"
+          :count="`${generalStats.breakdown.documents.count} Items`"
           styles="text-orange-400"
           progress-bar-bg="#ead7ba"
           progress-bar-fg="#ff9401"
@@ -175,10 +191,14 @@
 
         <FileCard
           name="Other Files"
-          amount="90"
-          end-amount="120"
-          start-amount="70"
-          count="200 Items"
+          :amount="
+            (generalStats.breakdown.others.size /
+              generalStats.storage_size?.[0]) *
+            100
+          "
+          :end-amount="formatFileSize(generalStats.storage_size?.[0])"
+          :start-amount="generalStats.breakdown.others.size_human"
+          :count="`${generalStats.breakdown.others.count} Items`"
           styles="text-blue-600"
           progress-bar-bg="#bcd2ea"
           progress-bar-fg="#0079ff"
@@ -342,6 +362,7 @@ onMounted(async () => {
     initTooltips();
   });
   await fetchGeneralStats();
+  await fetchAllFiles();
 });
 
 // Sidebar toggle
@@ -417,90 +438,107 @@ const previewFile = ref(null);
 const openFilePreview = (file) => {
   previewFile.value = file;
 };
-
+const generalStats = ref([]);
 // Data table functionality
 const headers = [
-  { key: 'fileName', label: 'File Name', sortable: true },
-  { key: 'dateUpdated', label: 'Date Updated', sortable: true },
-  { key: 'lastUpdate', label: 'Last Update', sortable: true },
-  { key: 'fileSize', label: 'File Size', sortable: true },
-  { key: 'fileOwner', label: 'File Owner', sortable: true },
+  { key: 'file_name', label: 'File Name', sortable: true },
+  { key: 'created_at', label: 'Date Updated', sortable: true },
+  { key: 'updated_at', label: 'Last Update', sortable: true },
+  { key: 'file_size', label: 'File Size', sortable: true },
+  { key: 'full_name', label: 'File Owner', sortable: true },
 ];
 
-const rows = [
-  {
-    id: 1,
-    fileName: 'Document1.pdf',
-    dateUpdated: '2024-01-01',
-    lastUpdate: '2024-01-01 12:00:00',
-    fileSize: '1.2MB',
-    fileOwner: 'John Doe',
-    type: 'image',
-  },
-  {
-    id: 2,
-    fileName: 'Image1.png',
-    dateUpdated: '2024-01-02',
-    lastUpdate: '2024-01-02 14:30:00',
-    fileSize: '500KB',
-    fileOwner: 'Jane Smith',
-    type: 'video',
-  },
-  {
-    id: 3,
-    fileName: 'Presentation1.pptx',
-    dateUpdated: '2024-01-03',
-    lastUpdate: '2024-01-03 09:15:00',
-    fileSize: '2.5MB',
-    fileOwner: 'Alice Brown',
-    type: 'image',
-  },
-  {
-    id: 4,
-    fileName: 'Spreadsheet1.xlsx',
-    dateUpdated: '2024-01-04',
-    lastUpdate: '2024-01-04 10:45:00',
-    fileSize: '3.1MB',
-    fileOwner: 'Bob Green',
-    type: 'other',
-  },
-  {
-    id: 5,
-    fileName: 'Notes.txt',
-    dateUpdated: '2024-01-05',
-    lastUpdate: '2024-01-05 11:00:00',
-    fileSize: '10KB',
-    fileOwner: 'Charlie Black',
-    type: 'document',
-  },
-  {
-    id: 6,
-    fileName: 'Archive.zip',
-    dateUpdated: '2024-01-06',
-    lastUpdate: '2024-01-06 08:20:00',
-    fileSize: '15MB',
-    fileOwner: 'David White',
-    type: 'video',
-  },
-  {
-    id: 7,
-    fileName: 'Photo.jpg',
-    dateUpdated: '2024-01-07',
-    lastUpdate: '2024-01-07 15:45:00',
-    fileSize: '2.8MB',
-    fileOwner: 'Eva Gray',
-    type: 'image',
-  },
-  {
-    id: 8,
-    fileName: 'Report.docx',
-    dateUpdated: '2024-01-08',
-    lastUpdate: '2024-01-08 13:20:00',
-    fileSize: '1.7MB',
-    fileOwner: 'Frank Blue',
-    type: 'document',
-  },
-];
+// const rows = [
+//   {
+//     id: 1,
+//     fileName: 'Document1.pdf',
+//     dateUpdated: '2024-01-01',
+//     lastUpdate: '2024-01-01 12:00:00',
+//     fileSize: '1.2MB',
+//     fileOwner: 'John Doe',
+//     type: 'image',
+//   },
+//   {
+//     id: 2,
+//     fileName: 'Image1.png',
+//     dateUpdated: '2024-01-02',
+//     lastUpdate: '2024-01-02 14:30:00',
+//     fileSize: '500KB',
+//     fileOwner: 'Jane Smith',
+//     type: 'video',
+//   },
+//   {
+//     id: 3,
+//     fileName: 'Presentation1.pptx',
+//     dateUpdated: '2024-01-03',
+//     lastUpdate: '2024-01-03 09:15:00',
+//     fileSize: '2.5MB',
+//     fileOwner: 'Alice Brown',
+//     type: 'image',
+//   },
+//   {
+//     id: 4,
+//     fileName: 'Spreadsheet1.xlsx',
+//     dateUpdated: '2024-01-04',
+//     lastUpdate: '2024-01-04 10:45:00',
+//     fileSize: '3.1MB',
+//     fileOwner: 'Bob Green',
+//     type: 'other',
+//   },
+//   {
+//     id: 5,
+//     fileName: 'Notes.txt',
+//     dateUpdated: '2024-01-05',
+//     lastUpdate: '2024-01-05 11:00:00',
+//     fileSize: '10KB',
+//     fileOwner: 'Charlie Black',
+//     type: 'document',
+//   },
+//   {
+//     id: 6,
+//     fileName: 'Archive.zip',
+//     dateUpdated: '2024-01-06',
+//     lastUpdate: '2024-01-06 08:20:00',
+//     fileSize: '15MB',
+//     fileOwner: 'David White',
+//     type: 'video',
+//   },
+//   {
+//     id: 7,
+//     fileName: 'Photo.jpg',
+//     dateUpdated: '2024-01-07',
+//     lastUpdate: '2024-01-07 15:45:00',
+//     fileSize: '2.8MB',
+//     fileOwner: 'Eva Gray',
+//     type: 'image',
+//   },
+//   {
+//     id: 8,
+//     fileName: 'Report.docx',
+//     dateUpdated: '2024-01-08',
+//     lastUpdate: '2024-01-08 13:20:00',
+//     fileSize: '1.7MB',
+//     fileOwner: 'Frank Blue',
+//     type: 'document',
+//   },
+// ];
+
+const formatFileSize = (size) => {
+  if (!size) return '';
+  if (typeof size === 'number') {
+    const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+    let i = 0;
+    while (size >= 1024 && i < units.length - 1) {
+      size /= 1024;
+      i++;
+    }
+    return `${size.toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
+  }
+  console.log('🚀 ~ formatFileSize ~ size:', size);
+  return size;
+};
+
+const rows = ref([]);
 
 // Filtering and sorting
 const searchQuery = ref('');
@@ -690,14 +728,26 @@ const handleBulkDelete = (ids) => {
   // Implement bulk delete
 };
 
-const refreshData = () => {
+const refreshData = async () => {
   console.log('Refresh data');
-  // Implement data refresh
+  await fetchAllFiles();
 };
 
 const fetchGeneralStats = async () => {
   try {
     const response = await $axios.get('dashboard/total-stats');
+    console.log('🚀 ~ fetchGeneralStats ~ response:', response);
+    generalStats.value = response.data;
+  } catch (error) {
+    console.log('🚀 ~ fetchGeneralStats ~ error:', error);
+  }
+};
+
+const fetchAllFiles = async () => {
+  try {
+    const response = await $axios.get('file/total-files');
+    console.log('🚀 ~ fetchAllFiles ~ response:', response);
+    rows.value = response.data.files.data;
   } catch (error) {
     console.log('🚀 ~ fetchGeneralStats ~ error:', error);
   }

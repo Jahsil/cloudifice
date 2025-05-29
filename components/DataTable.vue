@@ -341,35 +341,35 @@
               :key="header.key"
               :class="[
                 'px-6 py-4 whitespace-nowrap text-sm',
-                header.key === 'fileName'
+                header.key === 'file_name'
                   ? 'font-medium text-gray-900'
                   : 'text-gray-500',
               ]"
             >
               <div class="flex items-center">
-                <span v-if="header.key === 'fileName'" class="mr-3">
+                <span v-if="header.key === 'file_name'" class="mr-3">
                   <svg
-                    :class="fileTypeColorClass(row.type)"
+                    :class="fileTypeColorClass(row.file_type)"
                     xmlns="http://www.w3.org/2000/svg"
                     width="20"
                     height="20"
                     viewBox="0 0 24 24"
                     fill="none"
-                    :stroke="getFileTypeColor(row.type).text"
+                    :stroke="getFileTypeColor(row.file_type).text"
                     stroke-width="1.5"
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                    v-html="getFileTypeIcon(row.type)"
+                    v-html="getFileTypeIcon(row.file_type)"
                   ></svg>
                 </span>
                 <template
                   v-if="
-                    header.key === 'dateUpdated' || header.key === 'lastUpdate'
+                    header.key === 'created_at' || header.key === 'updated_at'
                   "
                 >
                   {{ formatDate(row[header.key]) }}
                 </template>
-                <template v-else-if="header.key === 'fileSize'">
+                <template v-else-if="header.key === 'file_size'">
                   {{ formatFileSize(row[header.key]) }}
                 </template>
                 <template v-else>
@@ -811,6 +811,7 @@ const getFileTypeColor = (type) => {
 };
 
 const fileTypeColorClass = (type) => {
+  console.log('🚀 ~ fileTypeColorClass ~ type:', type);
   const colors = {
     image: 'text-red-500',
     video: 'text-green-500',

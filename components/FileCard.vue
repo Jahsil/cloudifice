@@ -50,8 +50,8 @@
 
       <!-- Description -->
       <p class="text-sm text-neutral-600">
-        <span class="font-medium">{{ startAmount }} GB</span> of
-        <span class="font-medium">{{ endAmount }} GB</span> used
+        <span class="font-medium">{{ startAmount }} </span> of
+        <span class="font-medium">{{ endAmount }} </span> used
       </p>
     </div>
   </div>
