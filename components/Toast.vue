@@ -54,6 +54,52 @@
                 d="M4.5 12.75l6 6 9-13.5"
               />
             </svg>
+            <svg
+              v-else-if="toast.type === 'error'"
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+
+            <!-- ⚠️ Warning Icon -->
+            <svg
+              v-else-if="toast.type === 'warning'"
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 9v2m0 4h.01M4.93 19h14.14a1.5 1.5 0 001.3-2.25l-7.07-12.24a1.5 1.5 0 00-2.6 0L3.63 16.75A1.5 1.5 0 004.93 19z"
+              />
+            </svg>
+
+            <!-- ℹ️ Info Icon -->
+            <svg
+              v-else-if="toast.type === 'info'"
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 6h.01M11.25 10.5h1.5V18h-1.5z"
+              />
+            </svg>
             <!-- Other icons remain the same -->
           </div>
 
