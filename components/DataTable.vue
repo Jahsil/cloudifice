@@ -690,7 +690,7 @@ const filteredRows = computed(() => {
 
   // Apply type filters
   if (filters.value.type.length > 0) {
-    result = result.filter((row) => filters.value.type.includes(row.type));
+    result = result.filter((row) => filters.value.type.includes(row.file_type));
   }
 
   // Apply sorting

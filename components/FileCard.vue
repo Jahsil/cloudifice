@@ -70,14 +70,17 @@ defineProps({
   startAmount: {
     type: [String, Number],
     required: true,
+    default: 0,
   },
   endAmount: {
     type: [String, Number],
     required: true,
+    default: 0,
   },
   amount: {
     type: Number,
     required: false,
+    default: 0,
   },
   icon: {
     type: String,

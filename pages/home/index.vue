@@ -131,9 +131,11 @@
         <FileCard
           name="Image Files"
           :amount="
-            (generalStats.breakdown.images.size /
-              generalStats.storage_size?.[0]) *
-            100
+            (
+              (generalStats.breakdown.images.size /
+                generalStats.storage_size?.[0]) *
+              100
+            ).toFixed(2)
           "
           :end-amount="formatFileSize(generalStats.storage_size?.[0])"
           :start-amount="generalStats.breakdown.images.size_human"
@@ -151,10 +153,11 @@
         <FileCard
           name="Video Files"
           :amount="
-            (generalStats.breakdown.videos.size /
-              generalStats.storage_size?.[0]) *
-              100 +
-            0.0000001
+            (
+              (generalStats.breakdown.videos.size /
+                generalStats.storage_size?.[0]) *
+              100
+            ).toFixed(2)
           "
           :end-amount="formatFileSize(generalStats.storage_size?.[0])"
           :start-amount="generalStats.breakdown.videos.size_human"
@@ -172,9 +175,11 @@
         <FileCard
           name="Document Files"
           :amount="
-            (generalStats.breakdown.documents.size /
-              generalStats.storage_size?.[0]) *
-            100
+            (
+              (generalStats.breakdown.documents.size /
+                generalStats.storage_size?.[0]) *
+              100
+            ).toFixed(2)
           "
           :end-amount="formatFileSize(generalStats.storage_size?.[0])"
           :start-amount="generalStats.breakdown.documents.size_human"
@@ -192,9 +197,11 @@
         <FileCard
           name="Other Files"
           :amount="
-            (generalStats.breakdown.others.size /
-              generalStats.storage_size?.[0]) *
-            100
+            (
+              (generalStats.breakdown.others.size /
+                generalStats.storage_size?.[0]) *
+              100
+            ).toFixed(2)
           "
           :end-amount="formatFileSize(generalStats.storage_size?.[0])"
           :start-amount="generalStats.breakdown.others.size_human"
@@ -295,14 +302,14 @@
         <FileCard
           v-for="file in filteredRecentFiles"
           :key="file.id"
-          :name="file.fileName"
-          :end-amount="120"
-          :start-amount="30"
-          :count="file.fileSize"
-          :styles="getFileTypeColor(file.type).text"
-          :progress-bar-bg="getFileTypeColor(file.type).bg"
-          :progress-bar-fg="getFileTypeColor(file.type).fg"
-          :icon="getFileTypeIcon(file.type)"
+          :name="file.file_name"
+          :end-amount="formatFileSize(generalStats.storage_size?.[0])"
+          :start-amount="generalStats.breakdown.others.size_human"
+          :count="formatFileSize(file.file_size)"
+          :styles="getFileTypeColor(file.file_type).text"
+          :progress-bar-bg="getFileTypeColor(file.file_type).bg"
+          :progress-bar-fg="getFileTypeColor(file.file_type).fg"
+          :icon="getFileTypeIcon(file.file_type)"
           @click="openFilePreview(file)"
           class="cursor-pointer hover:shadow-md transition-shadow duration-200"
         />
@@ -363,6 +370,7 @@ onMounted(async () => {
   });
   await fetchGeneralStats();
   await fetchAllFiles();
+  await fetchRecentFiles();
 });
 
 // Sidebar toggle
@@ -405,32 +413,32 @@ const handleDrop = (event) => {
 };
 
 // Recent files data
-const recentFiles = [
-  {
-    id: 1,
-    fileName: 'holiday-01.jpeg',
-    type: 'image',
-    fileSize: '11.56 MB',
-  },
-  {
-    id: 2,
-    fileName: 'sem-report.docx',
-    type: 'document',
-    fileSize: '115.8 KB',
-  },
-  {
-    id: 3,
-    fileName: 'prototype-vid.mp4',
-    type: 'video',
-    fileSize: '1.56 GB',
-  },
-  {
-    id: 4,
-    fileName: 'supermarket.pdf',
-    type: 'document',
-    fileSize: '1.5 MB',
-  },
-];
+// const recentFiles = [
+//   {
+//     id: 1,
+//     fileName: 'holiday-01.jpeg',
+//     type: 'image',
+//     fileSize: '11.56 MB',
+//   },
+//   {
+//     id: 2,
+//     fileName: 'sem-report.docx',
+//     type: 'document',
+//     fileSize: '115.8 KB',
+//   },
+//   {
+//     id: 3,
+//     fileName: 'prototype-vid.mp4',
+//     type: 'video',
+//     fileSize: '1.56 GB',
+//   },
+//   {
+//     id: 4,
+//     fileName: 'supermarket.pdf',
+//     type: 'document',
+//     fileSize: '1.5 MB',
+//   },
+// ];
 
 // File preview
 const previewFile = ref(null);
@@ -539,6 +547,7 @@ const formatFileSize = (size) => {
 };
 
 const rows = ref([]);
+const recentFiles = ref([]);
 
 // Filtering and sorting
 const searchQuery = ref('');
@@ -594,14 +603,22 @@ const filteredRows = computed(() => {
 });
 
 const filteredRecentFiles = computed(() => {
-  return recentFiles.filter((file) => {
-    if (searchQuery.value) {
-      return file.fileName
-        .toLowerCase()
-        .includes(searchQuery.value.toLowerCase());
-    }
-    return true;
-  });
+  console.log(
+    '🚀 ~ returnrecentFiles.filter ~ recentFiles:',
+    recentFiles.value,
+  );
+
+  return recentFiles.value
+    .filter((file) => {
+      if (searchQuery.value) {
+        return file.file_name
+          .toLowerCase()
+          .includes(searchQuery.value.toLowerCase());
+      }
+      return true;
+    })
+    .sort((a, b) => new Date(b.accessed_at) - new Date(a.accessed_at))
+    .slice(0, 4);
 });
 
 const handleSort = (key) => {
@@ -748,6 +765,20 @@ const fetchAllFiles = async () => {
     const response = await $axios.get('file/total-files');
     console.log('🚀 ~ fetchAllFiles ~ response:', response);
     rows.value = response.data.files.data;
+  } catch (error) {
+    console.log('🚀 ~ fetchGeneralStats ~ error:', error);
+  }
+};
+
+const fetchRecentFiles = async () => {
+  try {
+    const response = await $axios.get('file/recent-files');
+    console.log('🚀 ~ fetchRecentFiles ~ response:', response);
+    recentFiles.value = response.data.recent_files;
+    console.log(
+      '🚀 ~ fetchRecentFiles ~ recentFiles.value:',
+      recentFiles.value,
+    );
   } catch (error) {
     console.log('🚀 ~ fetchGeneralStats ~ error:', error);
   }

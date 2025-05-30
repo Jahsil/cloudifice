@@ -1,17 +1,21 @@
-import { useAuthStore } from "@/stores/auth";
+import { useAuthStore } from '@/stores/auth';
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
   const auth = useAuthStore();
 
-  if (["/login", "/signup"].includes(to.path)) {
+  if (['/login', '/signup'].includes(to.path)) {
     return;
   }
 
   if (!auth.user) {
-    await auth.getUser();
+    try {
+      await auth.getUser();
+    } catch (error) {
+      console.log('🚀 ~ defineNuxtRouteMiddleware ~ error:', error);
+    }
   }
 
   if (!auth.user) {
-    return navigateTo("/login", { replace: true });
+    return navigateTo('/login', { replace: true });
   }
 });
