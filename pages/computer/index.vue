@@ -826,7 +826,7 @@ const handleDeleteRequestFromChild = async (folder) => {
             path:
               paths.value.length === 0
                 ? folder.name
-                : paths.join('/') + `${folder.name}`,
+                : paths.value.join('/') + `${folder.name}`,
           },
         },
       );
@@ -839,7 +839,7 @@ const handleDeleteRequestFromChild = async (folder) => {
             path:
               paths.value.length === 0
                 ? folder.name
-                : paths.join('/') + `${folder.name}`,
+                : paths.value.join('/') + `${folder.name}`,
           },
         },
       );
