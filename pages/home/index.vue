@@ -376,7 +376,6 @@ onMounted(async () => {
 // Sidebar toggle
 const toggleSidebar = () => {
   // Emit event to parent to toggle sidebar
-  console.log('Toggle sidebar');
 };
 
 // File upload functionality
@@ -390,7 +389,6 @@ const openFileUpload = () => {
 const handleFileUpload = (event) => {
   const files = event.target.files;
   if (files.length > 0) {
-    console.log('Files selected:', files);
     // Handle file upload logic here
   }
 };
@@ -406,7 +404,6 @@ const setDropzoneInactive = () => {
 const handleDrop = (event) => {
   const files = event.dataTransfer.files;
   if (files.length > 0) {
-    console.log('Files dropped:', files);
     // Handle file upload logic here
   }
   setDropzoneInactive();
@@ -542,7 +539,6 @@ const formatFileSize = (size) => {
     }
     return `${size.toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
   }
-  console.log('🚀 ~ formatFileSize ~ size:', size);
   return size;
 };
 
@@ -603,11 +599,6 @@ const filteredRows = computed(() => {
 });
 
 const filteredRecentFiles = computed(() => {
-  console.log(
-    '🚀 ~ returnrecentFiles.filter ~ recentFiles:',
-    recentFiles.value,
-  );
-
   return recentFiles.value
     .filter((file) => {
       if (searchQuery.value) {
@@ -711,49 +702,40 @@ const formatDate = (dateString) => {
 };
 
 const handleView = (row) => {
-  console.log('View:', row);
   // Implement view logic
 };
 
 const handleEdit = (row) => {
-  console.log('Edit:', row);
   // Implement edit logic
 };
 
 const handleDelete = (row) => {
-  console.log('Delete:', row);
   // Implement delete logic
 };
 
 const handleBulkDownload = (ids) => {
-  console.log('Bulk download:', ids);
   // Implement bulk download
 };
 
 const handleBulkShare = (ids) => {
-  console.log('Bulk share:', ids);
   // Implement bulk share
 };
 
 const handleBulkMove = (ids) => {
-  console.log('Bulk move:', ids);
   // Implement bulk move
 };
 
 const handleBulkDelete = (ids) => {
-  console.log('Bulk delete:', ids);
   // Implement bulk delete
 };
 
 const refreshData = async () => {
-  console.log('Refresh data');
   await fetchAllFiles();
 };
 
 const fetchGeneralStats = async () => {
   try {
     const response = await $axios.get('dashboard/total-stats');
-    console.log('🚀 ~ fetchGeneralStats ~ response:', response);
     generalStats.value = response.data;
   } catch (error) {
     console.log('🚀 ~ fetchGeneralStats ~ error:', error);
@@ -763,7 +745,6 @@ const fetchGeneralStats = async () => {
 const fetchAllFiles = async () => {
   try {
     const response = await $axios.get('file/total-files');
-    console.log('🚀 ~ fetchAllFiles ~ response:', response);
     rows.value = response.data.files.data;
   } catch (error) {
     console.log('🚀 ~ fetchGeneralStats ~ error:', error);
@@ -773,12 +754,7 @@ const fetchAllFiles = async () => {
 const fetchRecentFiles = async () => {
   try {
     const response = await $axios.get('file/recent-files');
-    console.log('🚀 ~ fetchRecentFiles ~ response:', response);
     recentFiles.value = response.data.recent_files;
-    console.log(
-      '🚀 ~ fetchRecentFiles ~ recentFiles.value:',
-      recentFiles.value,
-    );
   } catch (error) {
     console.log('🚀 ~ fetchGeneralStats ~ error:', error);
   }
