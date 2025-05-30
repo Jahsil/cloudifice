@@ -534,6 +534,7 @@
 import { ref } from 'vue';
 import Modal from '~/components/Modal.vue';
 import { useAuthStore } from '@/stores/auth';
+const { showToast } = useToast();
 
 const config = useRuntimeConfig();
 const apiBase = config.public.apiBase;
@@ -644,7 +645,12 @@ const uploadFile = async () => {
         },
       });
     } catch (error) {
+      let errorMessage = 'Folder creation failed';
+      if (error && error.response?.data?.message) {
+        errorMessage = error.response?.data?.message;
+      }
       console.error('Upload failed:', error);
+      showToast(errorMessage, 'error', 5000);
       isUploading.value = false;
       progress.value = 0;
       file.value = null;
@@ -655,7 +661,8 @@ const uploadFile = async () => {
   isUploading.value = false;
   progress.value = 0;
   file.value = null;
-  alert('File uploaded successfully!');
+  // alert('File uploaded successfully!');
+  showToast('File upload successful', 'success', 5000);
 };
 
 const folderError = ref({
@@ -698,11 +705,18 @@ async function createFolder() {
         },
       );
       if (response.data.status === 'OK') {
+        showToast('Folder creation succesful', 'success', 5000);
       }
       showModal.value = false;
     }
   } catch (error) {
     console.log('🚀 ~ createFolder ~ error:', error);
+    let errorMessage = 'Folder creation failed';
+    if (error && error.response?.data?.message) {
+      errorMessage = error.response?.data?.message;
+    }
+    showToast(errorMessage, 'error', 5000);
+
     showModal.value = false;
   }
 }
@@ -715,6 +729,7 @@ async function refresh() {
   } catch (error) {
     console.log('🚀 ~ refresh ~ error:', error);
     loading.value = false;
+    showToast('Folder creation failed', 'error', 5000);
   }
 }
 
@@ -761,11 +776,14 @@ const fetchFiles = async (folder) => {
   } catch (error) {
     console.log('🚀 ~ fetchFiles= ~ error:', error);
     if (error.response) {
-      // console.error("Error Status Code:", error.response.status);
-      // console.error("Error Headers:", error.response.headers);
-      // console.error("Error Data:", error.response._data);
+      let errorMessage = 'Folder creation failed';
+      if (error && error.response?.data?.message) {
+        errorMessage = error.response?.data?.message;
+      }
+      showToast(errorMessage, 'error', 5000);
     } else {
       console.error('Unexpected Error:', error);
+      showToast('Unexpected Error', 'error', 5000);
     }
   }
 };
@@ -828,9 +846,15 @@ const handleDeleteRequestFromChild = async (folder) => {
     }
 
     if (response.data.status === 'OK') {
+      showToast('Folder deletion successful', 'successful', 5000);
     }
   } catch (error) {
-    console.log('🚀 ~ handleDeleteRequestFromChild ~ error:', error);
+    console.log('🚀 ~ handleDeleteRequestFromChild ~ error:', error.response);
+    let errorMessage = 'Folder deletion failed';
+    if (error && error.response?.data?.message) {
+      errorMessage = error.response?.data?.message;
+    }
+    showToast(errorMessage, 'error', 5000);
   }
 };
 let folders = ref([]);
