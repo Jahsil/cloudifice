@@ -826,7 +826,7 @@ const handleDeleteRequestFromChild = async (folder) => {
             path:
               paths.value.length === 0
                 ? folder.name
-                : paths.value.join('/') + `${folder.name}`,
+                : paths.value.join('/') + `${folder.name}` + `/`,
           },
         },
       );
@@ -839,14 +839,14 @@ const handleDeleteRequestFromChild = async (folder) => {
             path:
               paths.value.length === 0
                 ? folder.name
-                : paths.value.join('/') + `${folder.name}`,
+                : paths.value.join('/') + `${folder.name}` + `/`,
           },
         },
       );
     }
 
     if (response.data.status === 'OK') {
-      showToast('Folder deletion successful', 'successful', 5000);
+      showToast('Folder deletion successful', 'success', 5000);
     }
   } catch (error) {
     console.log('🚀 ~ handleDeleteRequestFromChild ~ error:', error);
