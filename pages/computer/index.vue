@@ -816,7 +816,10 @@ const handleFileClickFromChild = (file, type) => {
 const handleDeleteRequestFromChild = async (folder) => {
   try {
     let response = null;
-
+    let newPath = '';
+    paths.value.forEach((item) => {
+      newPath += item + '/';
+    });
     if (folder.type == 'directory') {
       response = await $axios.post(
         'file/delete-folder',
@@ -825,8 +828,8 @@ const handleDeleteRequestFromChild = async (folder) => {
           params: {
             path:
               paths.value.length === 0
-                ? folder.name
-                : paths.value.join('/') + `${folder.name}` + `/`,
+                ? encodeURIComponent(folder.name)
+                : encodeURIComponent(newPath + `${folder.name}` + `/`),
           },
         },
       );
@@ -838,8 +841,8 @@ const handleDeleteRequestFromChild = async (folder) => {
           params: {
             path:
               paths.value.length === 0
-                ? folder.name
-                : paths.value.join('/') + `${folder.name}` + `/`,
+                ? encodeURIComponent(folder.name)
+                : encodeURIComponent(newPath + `${folder.name}` + `/`),
           },
         },
       );
