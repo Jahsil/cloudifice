@@ -849,7 +849,7 @@ const handleDeleteRequestFromChild = async (folder) => {
       showToast('Folder deletion successful', 'successful', 5000);
     }
   } catch (error) {
-    console.log('🚀 ~ handleDeleteRequestFromChild ~ error:', error.response);
+    console.log('🚀 ~ handleDeleteRequestFromChild ~ error:', error);
     let errorMessage = 'Folder deletion failed';
     if (error && error.response?.data?.message) {
       errorMessage = error.response?.data?.message;
