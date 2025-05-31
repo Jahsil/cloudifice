@@ -829,7 +829,7 @@ const handleDeleteRequestFromChild = async (folder) => {
             path:
               paths.value.length === 0
                 ? encodeURIComponent(folder.name)
-                : encodeURIComponent(newPath + `${folder.name}` + `/`),
+                : encodeURIComponent(newPath + `${folder.name}`),
           },
         },
       );
@@ -842,7 +842,7 @@ const handleDeleteRequestFromChild = async (folder) => {
             path:
               paths.value.length === 0
                 ? encodeURIComponent(folder.name)
-                : encodeURIComponent(newPath + `${folder.name}` + `/`),
+                : encodeURIComponent(newPath + `${folder.name}`),
           },
         },
       );
