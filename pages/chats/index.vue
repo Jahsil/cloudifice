@@ -842,6 +842,7 @@ const setLastActiveTime = async () => {
       Authorization: `Bearer ${token.value}`,
     },
   });
+  console.log('🚀 ~ setLastActiveTime ~ response:', response);
 };
 
 const messages = ref([]);
