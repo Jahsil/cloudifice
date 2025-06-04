@@ -788,10 +788,15 @@ onMounted(async () => {
         } else {
           person['show_status'] = false;
         }
+        console.log(
+          '🚀 ~ messages.value.forEach ~ messages.value:',
+          messages.value,
+        );
       });
     })
     .joining((user) => {
       console.log('User joined:', user); // One user joined
+
       messages.value.forEach((person) => {
         if (user?.id === person.id) {
           person['show_status'] = true;
@@ -799,6 +804,10 @@ onMounted(async () => {
           person['show_status'] = false;
         }
       });
+      console.log(
+        '🚀 ~ messages.value.forEach ~ messages.value:',
+        messages.value,
+      );
     })
     .leaving((user) => {
       console.log('User left:', user); // One user left
@@ -809,6 +818,10 @@ onMounted(async () => {
           person['show_status'] = true;
         }
       });
+      console.log(
+        '🚀 ~ messages.value.forEach ~ messages.value:',
+        messages.value,
+      );
     });
 });
 

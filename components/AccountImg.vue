@@ -48,6 +48,7 @@
       </div>
 
       <div
+        v-if="showStatus"
         class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-white rounded-full"
       ></div>
       <!-- <div
@@ -75,7 +76,7 @@ const props = defineProps({
     // default: "office.jpg",
   },
   showStatus: {
-    default: true,
+    default: false,
   },
   firstName: {
     default: 'Cloudifice',
