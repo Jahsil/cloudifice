@@ -410,7 +410,12 @@
                 <h2 class="font-semibold text-gray-900">
                   {{ selectedUser.first_name }} {{ selectedUser.last_name }}
                 </h2>
-                <p class="text-sm text-green-600">Online</p>
+                <p v-if="checkIfUserIsOnline" class="text-sm text-green-600">
+                  Online
+                </p>
+                <p v-else class="text-sm text-gray-400">
+                  {{ selectedUser.last_active_time }}
+                </p>
               </div>
             </div>
 
@@ -781,6 +786,7 @@ onMounted(async () => {
 
   presenceChannel
     .here((users) => {
+      onlineUserIDs.value = users.map((item) => item.id);
       messages.value.forEach((person) => {
         let onlineUser = users.find((user) => user.id === person.id);
         if (onlineUser) {
@@ -796,7 +802,7 @@ onMounted(async () => {
     })
     .joining((user) => {
       console.log('User joined:', user); // One user joined
-
+      onlineUserIDs.value.push(user.id);
       messages.value.forEach((person) => {
         if (user?.id === person.id) {
           person['show_status'] = true;
@@ -811,6 +817,12 @@ onMounted(async () => {
     })
     .leaving((user) => {
       console.log('User left:', user); // One user left
+      let removeIndex = onlineUserIDs.value.indexOf(user.id);
+      let newArr = onlineUserIDs.value.filter(
+        (_, index) => index !== removeIndex,
+      );
+
+      onlineUserIDs.value = [...newArr];
       messages.value.forEach((person) => {
         if (user?.id === person.id) {
           person['show_status'] = false;
@@ -820,10 +832,24 @@ onMounted(async () => {
         '🚀 ~ messages.value.forEach ~ messages.value:',
         messages.value,
       );
+      setLastActiveTime();
     });
 });
 
+const setLastActiveTime = async () => {
+  const response = await $axios.post(`chat/last-active/${auth.user.id}`, {
+    headers: {
+      Authorization: `Bearer ${token.value}`,
+    },
+  });
+};
+
 const messages = ref([]);
+const onlineUserIDs = ref([]);
+
+const checkIfUserIsOnline = computed(() => {
+  return onlineUserIDs.value.includes(selectedUser.id);
+});
 
 const toogleAccountInfo = () => {
   accountInfo.value = !accountInfo.value;
