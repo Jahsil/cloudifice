@@ -362,6 +362,7 @@
                   :first-name="message.first_name"
                   height="48px"
                   width="48px"
+                  :show-status="message.show_status"
                 />
               </div>
               <div class="flex-1 min-w-0">
@@ -780,13 +781,34 @@ onMounted(async () => {
 
   presenceChannel
     .here((users) => {
-      console.log('🚀 ~ presenceChannel.here ~ users:', users);
+      messages.value.forEach((person) => {
+        let onlineUser = users.find((user) => user.id === person.id);
+        if (onlineUser) {
+          person['show_status'] = true;
+        } else {
+          person['show_status'] = false;
+        }
+      });
     })
     .joining((user) => {
       console.log('User joined:', user); // One user joined
+      messages.value.forEach((person) => {
+        if (user?.id === person.id) {
+          person['show_status'] = true;
+        } else {
+          person['show_status'] = false;
+        }
+      });
     })
     .leaving((user) => {
       console.log('User left:', user); // One user left
+      messages.value.forEach((person) => {
+        if (user?.id === person.id) {
+          person['show_status'] = false;
+        } else {
+          person['show_status'] = true;
+        }
+      });
     });
 });
 
