@@ -778,9 +778,16 @@ onMounted(async () => {
 
   const presenceChannel = $echo.join(`presence.online`);
 
-  presenceChannel.here((users) => {
-    console.log('🚀 ~ presenceChannel.here ~ users:', users);
-  });
+  presenceChannel
+    .here((users) => {
+      console.log('🚀 ~ presenceChannel.here ~ users:', users);
+    })
+    .joining((user) => {
+      console.log('User joined:', user); // One user joined
+    })
+    .leaving((user) => {
+      console.log('User left:', user); // One user left
+    });
 });
 
 const messages = ref([]);
