@@ -814,8 +814,6 @@ onMounted(async () => {
       messages.value.forEach((person) => {
         if (user?.id === person.id) {
           person['show_status'] = false;
-        } else {
-          person['show_status'] = true;
         }
       });
       console.log(
