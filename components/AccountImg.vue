@@ -89,8 +89,6 @@ const props = defineProps({
   },
 });
 
-console.log('Account Image :::', props.accountImg);
-
 onMounted(() => {});
 </script>
 
