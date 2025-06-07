@@ -407,7 +407,6 @@
                 width="44px"
               />
               <div>
-                {{ isUserOnline }}
                 <h2 class="font-semibold text-gray-900">
                   {{ selectedUser.first_name }} {{ selectedUser.last_name }}
                 </h2>
@@ -831,16 +830,14 @@ const setLastActiveTime = async (user) => {
 };
 
 const messages = ref([]);
-const onlineUserIDs = ref([1, 2]);
+const onlineUserIDs = ref([]);
 
 const isUserOnline = ref(false);
 
 watch(
   onlineUserIDs,
   (newVal) => {
-    console.log('🚀 ~ newVal:', newVal, '::', typeof newVal);
-    console.log('🚀 ~ newVal selected:', newVal.includes(selectedUser.id));
-    isUserOnline.value = newVal.includes(selectedUser.id);
+    isUserOnline.value = newVal.includes(selectedUser.value.id);
   },
   { deep: true },
 );
@@ -955,6 +952,7 @@ const viewMessage = async (index, message) => {
   chats.value = [];
   selectedMessage.value = index;
   selectedUser.value = message;
+  isUserOnline.value = onlineUserIDs.value.includes(selectedUser.value.id);
   await getHistory();
 };
 
