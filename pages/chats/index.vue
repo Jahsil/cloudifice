@@ -410,11 +410,15 @@
                 <h2 class="font-semibold text-gray-900">
                   {{ selectedUser.first_name }} {{ selectedUser.last_name }}
                 </h2>
+                {{ selectedUser }}
                 <p v-if="checkIfUserIsOnline" class="text-sm text-green-600">
                   Online
                 </p>
                 <p v-else class="text-sm text-gray-400">
-                  {{ selectedUser.last_active_time }}
+                  {{
+                    selectedUser.last_active_time ??
+                    formatDate(selectedUser.created_at)
+                  }}
                 </p>
               </div>
             </div>
@@ -794,10 +798,6 @@ onMounted(async () => {
         } else {
           person['show_status'] = false;
         }
-        console.log(
-          '🚀 ~ messages.value.forEach ~ messages.value:',
-          messages.value,
-        );
       });
     })
     .joining((user) => {
@@ -810,10 +810,6 @@ onMounted(async () => {
           person['show_status'] = false;
         }
       });
-      console.log(
-        '🚀 ~ messages.value.forEach ~ messages.value:',
-        messages.value,
-      );
     })
     .leaving((user) => {
       console.log('User left:', user); // One user left
@@ -828,20 +824,13 @@ onMounted(async () => {
           person['show_status'] = false;
         }
       });
-      console.log(
-        '🚀 ~ messages.value.forEach ~ messages.value:',
-        messages.value,
-      );
-      setLastActiveTime();
+
+      setLastActiveTime(user);
     });
 });
 
-const setLastActiveTime = async () => {
-  const response = await $axios.post(`chat/last-active/${auth.user.id}`, {
-    headers: {
-      Authorization: `Bearer ${token.value}`,
-    },
-  });
+const setLastActiveTime = async (user) => {
+  const response = await $axios.post(`chat/last-active/${user.id}`, {});
   console.log('🚀 ~ setLastActiveTime ~ response:', response);
 };
 
