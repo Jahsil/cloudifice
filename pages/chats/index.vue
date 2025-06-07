@@ -407,12 +407,11 @@
                 width="44px"
               />
               <div>
+                {{ isUserOnline }}
                 <h2 class="font-semibold text-gray-900">
                   {{ selectedUser.first_name }} {{ selectedUser.last_name }}
                 </h2>
-                <p v-if="checkIfUserIsOnline" class="text-sm text-green-600">
-                  Online
-                </p>
+                <p v-if="isUserOnline" class="text-sm text-green-600">Online</p>
                 <p v-else class="text-sm text-gray-400">
                   <span v-if="selectedUser.last_active_time">Last seen at</span>
                   {{
@@ -832,15 +831,16 @@ const setLastActiveTime = async (user) => {
 };
 
 const messages = ref([]);
-const onlineUserIDs = ref([]);
+const onlineUserIDs = ref([1, 2]);
 
-const checkIfUserIsOnline = ref(false);
+const isUserOnline = ref(false);
 
 watch(
   onlineUserIDs,
   (newVal) => {
-    console.log('🚀 ~ newVal:', newVal);
-    checkIfUserIsOnline.value = newVal.includes(selectedUser.id);
+    console.log('🚀 ~ newVal:', newVal, '::', typeof newVal);
+    console.log('🚀 ~ newVal selected:', newVal.includes(selectedUser.id));
+    isUserOnline.value = newVal.includes(selectedUser.id);
   },
   { deep: true },
 );
