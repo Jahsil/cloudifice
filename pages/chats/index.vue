@@ -410,13 +410,13 @@
                 <h2 class="font-semibold text-gray-900">
                   {{ selectedUser.first_name }} {{ selectedUser.last_name }}
                 </h2>
-                {{ selectedUser }}
                 <p v-if="checkIfUserIsOnline" class="text-sm text-green-600">
                   Online
                 </p>
                 <p v-else class="text-sm text-gray-400">
+                  <span v-if="selectedUser.last_active_time">Last seen at</span>
                   {{
-                    selectedUser.last_active_time ??
+                    formatDate(selectedUser.last_active_time) ??
                     formatDate(selectedUser.created_at)
                   }}
                 </p>
@@ -738,8 +738,6 @@ const fetchOlderMessages = async () => {
 
 const handleScroll = async () => {
   if (chatContainer.value && chatContainer.value.scrollTop === 0) {
-    console.log('Scrolled to the top', chatContainer.value.scrollTop);
-
     const previousScrollHeight = chatContainer.value.scrollHeight;
     const previousScrollTop = chatContainer.value.scrollTop;
 
@@ -776,7 +774,7 @@ onMounted(async () => {
   if (chatContainer.value) {
     chatContainer.value.addEventListener('scroll', handleScroll);
   }
-  console.log('Listening on ', `chat.${auth.user.id}`);
+  // console.log('Listening on ', `chat.${auth.user.id}`);
 
   $echo.private(`chat.${auth.user.id}`).listen('MessageSent', (event) => {
     chats.value = [...chats.value, event.message];
@@ -831,15 +829,21 @@ onMounted(async () => {
 
 const setLastActiveTime = async (user) => {
   const response = await $axios.post(`chat/last-active/${user.id}`, {});
-  console.log('🚀 ~ setLastActiveTime ~ response:', response);
 };
 
 const messages = ref([]);
 const onlineUserIDs = ref([]);
 
-const checkIfUserIsOnline = computed(() => {
-  return onlineUserIDs.value.includes(selectedUser.id);
-});
+const checkIfUserIsOnline = ref(false);
+
+watch(
+  onlineUserIDs,
+  (newVal) => {
+    console.log('🚀 ~ newVal:', newVal);
+    checkIfUserIsOnline.value = newVal.includes(selectedUser.id);
+  },
+  { deep: true },
+);
 
 const toogleAccountInfo = () => {
   accountInfo.value = !accountInfo.value;
@@ -979,7 +983,6 @@ const getHistory = async (page = 1) => {
       },
     );
     chatHistory = response.data.data.data;
-    console.log('🚀 ~ getHistory ~ chatHistory:', chatHistory);
 
     chats.value = [...chatHistory.sort((a, b) => a.id - b.id), ...chats.value];
   } catch (error) {
