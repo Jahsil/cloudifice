@@ -126,10 +126,11 @@
                   :first-name="message.first_name"
                   height="48px"
                   width="48px"
+                  :show-status="message.show_status"
                 />
-                <div
+                <!-- <div
                   class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-white rounded-full"
-                ></div>
+                ></div> -->
               </div>
               <div class="flex-1 min-w-0">
                 <div class="flex justify-between items-start">
@@ -189,7 +190,16 @@
                 <h2 class="font-semibold truncate">
                   {{ selectedUser.first_name }} {{ selectedUser.last_name }}
                 </h2>
-                <p class="text-blue-100 text-sm">Online</p>
+
+                <p v-if="isUserOnline" class="text-blue-100 text-sm">Online</p>
+
+                <p v-else class="text-blue-100 text-sm">
+                  <span v-if="selectedUser.last_active_time">Last seen at</span>
+                  {{
+                    formatDate(selectedUser.last_active_time) ??
+                    formatDate(selectedUser.created_at)
+                  }}
+                </p>
               </div>
             </div>
             <button
