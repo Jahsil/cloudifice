@@ -581,13 +581,14 @@
       </div>
 
       <!-- Account Info Panel (Desktop Only) -->
+      <!-- accountInfo &&  -->
       <div
-        v-if="accountInfo && selectedUser"
+        v-if="selectedUser"
         class="w-80 bg-white border-l border-gray-200 flex flex-col"
       >
         <!-- Panel Header -->
         <div
-          class="p-6 border-b border-gray-200 flex justify-between items-center"
+          class="p-[22px] border-b border-gray-200 flex justify-between items-center"
         >
           <h3 class="font-semibold text-gray-900">Contact Info</h3>
           <button
@@ -613,15 +614,17 @@
         <div class="flex-1 overflow-y-auto">
           <!-- User Profile -->
           <div class="p-6 text-center border-b border-gray-200">
-            <AccountImg
-              :account-img="selectedUser.profile_image_url"
-              font-size="48px"
-              line-height="1"
-              :show-status="false"
-              height="120px"
-              width="120px"
-              class="mx-auto"
-            />
+            <div class="flex justify-center">
+              <AccountImg
+                :account-img="selectedUser.profile_image_url"
+                :first-name="selectedUser.first_name"
+                font-size="48px"
+                line-height="1"
+                :show-status="false"
+                height="120px"
+                width="120px"
+              />
+            </div>
             <h3 class="text-xl font-semibold mt-4 text-gray-900">
               {{ selectedUser.first_name }} {{ selectedUser.last_name }}
             </h3>
@@ -776,6 +779,7 @@ token.value = auth_token.value;
 
 onMounted(async () => {
   await getPeople();
+  excludeCurrentUserFromPeoplesList();
   // await getHistory();
   await nextTick(); // Ensures DOM updates before scrolling
   scrollToBottom();
@@ -965,7 +969,12 @@ const viewMessage = async (index, message) => {
   isUserOnline.value = onlineUserIDs.value.includes(selectedUser.value.id);
   await getHistory();
 };
+const excludeCurrentUserFromPeoplesList = () => {
+  let people = [...messages.value];
+  let filteredPeople = people.filter((item) => item.id !== auth.user.id);
 
+  messages.value = [...filteredPeople];
+};
 const getPeople = async () => {
   try {
     const response = await $axios.get(`/auth/users`, {
