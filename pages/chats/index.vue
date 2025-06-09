@@ -581,9 +581,8 @@
       </div>
 
       <!-- Account Info Panel (Desktop Only) -->
-      <!-- accountInfo &&  -->
       <div
-        v-if="selectedUser"
+        v-if="accountInfo && selectedUser"
         class="w-80 bg-white border-l border-gray-200 flex flex-col"
       >
         <!-- Panel Header -->
