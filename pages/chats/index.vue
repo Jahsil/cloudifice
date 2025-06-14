@@ -359,7 +359,7 @@
             v-for="(message, index) in messages"
             :key="index"
             @click="viewMessage(index, message)"
-            class="px-4 py-4 border-b border-gray-100 hover:bg-blue-50 cursor-pointer transition-all duration-150"
+            class="px-4 py-4 border-b border-gray-100 hover:bg-blue-50 cursor-pointer transition-all duration-150 group"
             :class="{
               'bg-blue-50 border-r-4 border-blue-500':
                 selectedMessage === index,
@@ -380,11 +380,22 @@
                   <h3 class="font-semibold text-gray-900 truncate">
                     {{ message.first_name }} {{ message.last_name }}
                   </h3>
-                  <span class="text-xs text-gray-500 whitespace-nowrap ml-2">
-                    {{ formatDate(message.lastMessageTime) }}
-                  </span>
+                  <div class="flex items-center">
+                    <span class="text-xs text-gray-500 whitespace-nowrap ml-2">
+                      {{ formatDate(message.lastMessageTime) }}
+                    </span>
+                    <!-- Awesome notification badge -->
+                    <transition name="fade-scale">
+                      <span
+                        v-if="message.unread"
+                        class="ml-1.5 bg-gradient-to-br text-black text-xs font-bold rounded-full h-5 min-w-5 px-1 flex items-center justify-center transform group-hover:scale-110 transition-all duration-200 shadow-sm"
+                      >
+                        {{ message.unread }}
+                      </span>
+                    </transition>
+                  </div>
                 </div>
-                <p class="text-sm text-gray-600 truncate mt-1">
+                <p :class="[`text-sm text-gray-600 truncate mt-1`]">
                   {{ message.lastMessage }}
                 </p>
               </div>
@@ -779,6 +790,8 @@ token.value = auth_token.value;
 onMounted(async () => {
   await getPeople();
   excludeCurrentUserFromPeoplesList();
+
+  await getUnreadMessages();
   // await getHistory();
   await nextTick(); // Ensures DOM updates before scrolling
   scrollToBottom();
@@ -966,6 +979,11 @@ const viewMessage = async (index, message) => {
   selectedMessage.value = index;
   selectedUser.value = message;
   isUserOnline.value = onlineUserIDs.value.includes(selectedUser.value.id);
+  messages.value.forEach((item) => {
+    if (item.id === selectedUser.value.id) {
+      item['unread'] = 0;
+    }
+  });
   await getHistory();
 };
 const excludeCurrentUserFromPeoplesList = () => {
@@ -1039,7 +1057,20 @@ const selectUserMobile = (index, message) => {
   showPeopleList.value = false;
 };
 
-// Your existing methods...
+const getUnreadMessages = async () => {
+  try {
+    const response = await $axios.get(`chat/new-messages`, {
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+      },
+    });
+    messages.value.forEach((item) => {
+      item['unread'] = response.data?.user?.[item.id] ?? 0;
+    });
+  } catch (error) {
+    console.log('🚀 ~ getUnreadMessages ~ error:', error);
+  }
+};
 </script>
 
 <style>
@@ -1063,5 +1094,15 @@ const selectUserMobile = (index, message) => {
 /* Hide scrollbar for firefox */
 .scrollbar-hidden {
   scrollbar-width: none;
+}
+
+.fade-scale-enter-active,
+.fade-scale-leave-active {
+  transition: all 0.2s ease;
+}
+.fade-scale-enter-from,
+.fade-scale-leave-to {
+  opacity: 0;
+  transform: scale(0.8);
 }
 </style>
