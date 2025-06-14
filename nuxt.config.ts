@@ -1,8 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  ssr: false,
+  ssr: true,
   devServer: {
-    host: "0.0.0.0",
+    host: '0.0.0.0',
     port: 3000,
   },
   runtimeConfig: {
@@ -28,10 +28,10 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ["@pinia/nuxt"],
-  compatibilityDate: "2024-11-01",
+  modules: ['@pinia/nuxt'],
+  compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
-  css: ["~/assets/css/main.css"],
+  css: ['~/assets/css/main.css'],
   postcss: {
     plugins: {
       tailwindcss: {},
