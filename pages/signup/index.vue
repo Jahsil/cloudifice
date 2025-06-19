@@ -295,9 +295,9 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useNuxtApp } from "#app";
-import { useRouter } from "vue-router";
+import { ref } from 'vue';
+import { useNuxtApp } from '#app';
+import { useRouter } from 'vue-router';
 
 const { $axios, $axiosTest } = useNuxtApp();
 const router = useRouter();
@@ -348,120 +348,120 @@ const handleSignupClick = throttle(signUp, 3000);
 const handleUsernameClick = throttle(createUsername, 3000);
 
 const signUpForm = ref({
-  firstName: "",
-  lastName: "",
-  email: "",
-  phone: "",
-  dob: "",
-  nationality: "",
-  password: "",
-  confirmPassword: "",
+  firstName: '',
+  lastName: '',
+  email: '',
+  phone: '',
+  dob: '',
+  nationality: '',
+  password: '',
+  confirmPassword: '',
 });
 
 const errors = ref({
-  firstName: "",
-  lastName: "",
-  email: "",
-  phone: "",
-  dob: "",
-  nationality: "",
-  password: "",
-  confirmPassword: "",
+  firstName: '',
+  lastName: '',
+  email: '',
+  phone: '',
+  dob: '',
+  nationality: '',
+  password: '',
+  confirmPassword: '',
 });
 
-const usernameError = ref("");
+const usernameError = ref('');
 const registredUser = ref(null);
 const loading = ref(false);
 
 let userAdded = ref(false);
-let username = ref("");
+let username = ref('');
 
 function validateForm() {
   let isValid = true;
 
   // First Name Validation
   if (!signUpForm.value.firstName) {
-    errors.value.firstName = "First name is required.";
+    errors.value.firstName = 'First name is required.';
     isValid = false;
   } else if (!/^[A-Za-z]{1,50}$/.test(signUpForm.value.firstName)) {
     errors.value.firstName =
-      "First name must be up to 50 characters, letters only (A-Z or a-z).";
+      'First name must be up to 50 characters, letters only (A-Z or a-z).';
     isValid = false;
   } else {
-    errors.value.firstName = "";
+    errors.value.firstName = '';
   }
 
   // Last Name Validation
   if (!signUpForm.value.lastName) {
-    errors.value.lastName = "Last name is required.";
+    errors.value.lastName = 'Last name is required.';
     isValid = false;
   } else if (!/^[A-Za-z]{1,50}$/.test(signUpForm.value.lastName)) {
     errors.value.lastName =
-      "Last name must be up to 50 characters, letters only (A-Z or a-z).";
+      'Last name must be up to 50 characters, letters only (A-Z or a-z).';
     isValid = false;
   } else {
-    errors.value.lastName = "";
+    errors.value.lastName = '';
   }
 
   // Email Validation
   if (!signUpForm.value.email) {
-    errors.value.email = "Email is required.";
+    errors.value.email = 'Email is required.';
     isValid = false;
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(signUpForm.value.email)) {
-    errors.value.email = "Email format is invalid.";
+    errors.value.email = 'Email format is invalid.';
     isValid = false;
   } else {
-    errors.value.email = "";
+    errors.value.email = '';
   }
 
   // Phone Validation
   if (!signUpForm.value.phone) {
-    errors.value.phone = "Phone number is required.";
+    errors.value.phone = 'Phone number is required.';
     isValid = false;
   } else if (!/^\+\d{1,3}[0-9]{4,14}$/.test(signUpForm.value.phone)) {
     errors.value.phone =
-      "Phone number must start with a country code (e.g., +123) followed by digits.";
+      'Phone number must start with a country code (e.g., +123) followed by digits.';
     isValid = false;
   } else {
-    errors.value.phone = "";
+    errors.value.phone = '';
   }
 
   // Date of Birth Validation
   if (!signUpForm.value.dob) {
-    errors.value.dob = "Date of birth is required.";
+    errors.value.dob = 'Date of birth is required.';
     isValid = false;
   } else {
-    errors.value.dob = "";
+    errors.value.dob = '';
   }
 
   // Nationality Validation
   if (!signUpForm.value.nationality) {
-    errors.value.nationality = "Nationality is required.";
+    errors.value.nationality = 'Nationality is required.';
     isValid = false;
   } else {
-    errors.value.nationality = "";
+    errors.value.nationality = '';
   }
 
   // Password Validation
   if (!signUpForm.value.password) {
-    errors.value.password = "Password is required.";
+    errors.value.password = 'Password is required.';
     isValid = false;
   } else if (signUpForm.value.password.length < 6) {
-    errors.value.password = "Password must be at least 6 characters.";
+    errors.value.password = 'Password must be at least 6 characters.';
     isValid = false;
   } else {
-    errors.value.password = "";
+    errors.value.password = '';
   }
 
   // Confirm Password Validation
   if (!signUpForm.value.confirmPassword) {
-    errors.value.confirmPassword = "Confirm password is required.";
+    errors.value.confirmPassword = 'Confirm password is required.';
     isValid = false;
   } else if (signUpForm.value.confirmPassword !== signUpForm.value.password) {
-    errors.value.confirmPassword = "Passwords do not match.";
+    errors.value.confirmPassword = 'Passwords do not match.';
     isValid = false;
   } else {
-    errors.value.confirmPassword = "";
+    errors.value.confirmPassword = '';
   }
 
   return isValid;
@@ -472,14 +472,14 @@ function validateUsername() {
 
   // Username Validation
   if (!username.value) {
-    usernameError.value = "Username is required.";
+    usernameError.value = 'Username is required.';
     isValid = false;
   } else if (!/^[A-Za-z]{1,50}$/.test(username.value)) {
     usernameError.value =
-      "Username must be up to 50 characters, letters only (A-Z or a-z).";
+      'Username must be up to 50 characters, letters only (A-Z or a-z).';
     isValid = false;
   } else {
-    usernameError.value = "";
+    usernameError.value = '';
   }
 
   return isValid;
@@ -491,19 +491,19 @@ async function signUp() {
       loading.value = true;
 
       let formData = {};
-      formData["first_name"] = signUpForm.value.firstName;
-      formData["last_name"] = signUpForm.value.lastName;
-      formData["nationality"] = signUpForm.value.nationality;
-      formData["phone"] = signUpForm.value.phone;
-      formData["email"] = signUpForm.value.email;
-      formData["password"] = signUpForm.value.password;
+      formData['first_name'] = signUpForm.value.firstName;
+      formData['last_name'] = signUpForm.value.lastName;
+      formData['nationality'] = signUpForm.value.nationality;
+      formData['phone'] = signUpForm.value.phone;
+      formData['email'] = signUpForm.value.email;
+      formData['password'] = signUpForm.value.password;
 
       await $axiosTest.get(`sanctum/csrf-cookie`, {
         withCredentials: true,
         credentials: true,
       });
 
-      const response = await $axios.post("auth/register", formData);
+      const response = await $axios.post('auth/register', formData);
       if (response.status == 201 || response.status == 200) {
         userAdded.value = true;
         username.value = signUpForm.value.firstName;
@@ -511,7 +511,7 @@ async function signUp() {
       }
       loading.value = false;
     } catch (error) {
-      console.log("🚀 ~ signUp ~ error:", error);
+      console.log('🚀 ~ signUp ~ error:', error);
       loading.value = false;
     }
   }
@@ -523,17 +523,34 @@ async function createUsername() {
       loading.value = true;
 
       let formData = {};
-      formData["username"] = username.value;
-      formData["user_id"] = registredUser.value.id;
+      formData['username'] = username.value;
+      formData['user_id'] = registredUser.value.id;
 
-      const response = await $axios.post("auth/finish_registration", formData);
-      if (response.data.status === "OK") {
-        router.push("/login");
+      const response = await $axios.post('auth/finish_registration', formData);
+      if (response.data.status === 'OK') {
+        // router.push('/login');
+        await allowAccess();
       }
       loading.value = false;
     } catch (error) {
-      console.log("🚀 ~ createUsername ~ error:", error);
+      console.log('🚀 ~ createUsername ~ error:', error);
       loading.value = false;
+    }
+  }
+}
+
+async function allowAccess() {
+  if (validateUsername()) {
+    try {
+      const response = await $axios.post(
+        `auth/access_delegation/${registredUser.value.id}`,
+        {},
+      );
+      if (response.data.status === 'OK') {
+        router.push('/login');
+      }
+    } catch (error) {
+      console.log('🚀 ~ createUsername ~ error:', error);
     }
   }
 }
