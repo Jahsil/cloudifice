@@ -302,6 +302,8 @@ import { useRouter } from 'vue-router';
 const { $axios, $axiosTest } = useNuxtApp();
 const router = useRouter();
 
+const { showToast } = useToast();
+
 definePageMeta({
   layout: false,
 });
@@ -534,6 +536,11 @@ async function createUsername() {
       loading.value = false;
     } catch (error) {
       console.log('🚀 ~ createUsername ~ error:', error);
+      let errorMessage = 'Cannot create username.';
+      if (error?.response?.data?.message) {
+        errorMessage = error?.response?.data?.message;
+      }
+      showToast(errorMessage, 'error', 5000);
       loading.value = false;
     }
   }
@@ -547,10 +554,17 @@ async function allowAccess() {
         {},
       );
       if (response.data.status === 'OK') {
+        showToast('Account created succussfully', 'success', 5000);
+
         router.push('/login');
       }
     } catch (error) {
       console.log('🚀 ~ createUsername ~ error:', error);
+      let errorMessage = 'Access denied.';
+      if (error?.response?.data?.message) {
+        errorMessage = error?.response?.data?.message;
+      }
+      showToast(errorMessage, 'error', 5000);
     }
   }
 }
