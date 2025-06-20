@@ -55,11 +55,36 @@
         >
           Cancel
         </button>
-        <button
+        <!-- <button
           @click="createFolder"
           class="px-4 py-2 text-sm text-white bg-blue-600 rounded hover:bg-blue-700 focus:outline-none"
         >
           Confirm
+        </button> -->
+
+        <button
+          @click="handleCreateFolder"
+          class="px-4 py-2 text-sm text-white bg-blue-600 rounded hover:bg-blue-700 focus:outline-none"
+        >
+          <span v-if="loadingCreateFolder" class="mr-2">
+            <svg
+              aria-hidden="true"
+              class="inline w-5 h-5 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+              viewBox="0 0 100 101"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                fill="currentColor"
+              />
+              <path
+                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                fill="currentFill"
+              />
+            </svg>
+          </span>
+          <span>Confirm</span>
         </button>
       </div>
     </Modal>
@@ -137,10 +162,15 @@
           </div>
         </div>
         <!-- see uploaded file  -->
-        <div v-if="file" class="mt-6 mb-2 py-4 px-3 rounded-lg bg-[#f1f3f4]">
-          <div class="flex justify-between">
-            <div class="flex gap-2">
-              <div>
+        <div
+          v-if="file"
+          class="mt-6 mb-2 p-4 rounded-lg bg-[#f1f3f4] overflow-hidden"
+        >
+          <div class="flex justify-between gap-4">
+            <!-- File Info Section -->
+            <div class="flex gap-3 min-w-0">
+              <!-- File Icon -->
+              <div class="flex-shrink-0">
                 <svg
                   class="text-orange-400"
                   xmlns="http://www.w3.org/2000/svg"
@@ -165,47 +195,53 @@
                   </g>
                 </svg>
               </div>
-              <div class="flex-col">
-                <p class="font-medium">{{ inputFileName }}</p>
-                <p class="text-sm text-gray-500">
-                  {{ (inputFileSize / 1024).toFixed(2) }}KB .
+
+              <!-- File Details -->
+              <div class="min-w-0">
+                <p class="font-medium truncate">{{ inputFileName }}</p>
+                <p class="text-sm text-gray-500 truncate">
+                  {{ formatBytes(inputFileSize) }}
                   <span v-if="progress">
-                    {{ timeRemaining }} seconds left
-                  </span>
+                    • {{ timeRemaining }} seconds left</span
+                  >
                 </p>
               </div>
             </div>
-            <div class="flex-col space-y-1">
-              <div>
-                <button
-                  @click="removeFile"
-                  class="text-gray-400 hover:text-gray-600 focus:outline-none"
+
+            <!-- Actions & Progress -->
+            <div class="flex flex-col items-end gap-1 flex-shrink-0">
+              <button
+                @click="removeFile"
+                class="text-gray-400 hover:text-gray-600 focus:outline-none"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="1.5"
-                      d="M19 5L5 19M5 5l14 14"
-                      color="currentColor"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <p v-if="progress" class="text-sm text-gray-500">
-                {{ progress }} %
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                    d="M19 5L5 19M5 5l14 14"
+                    color="currentColor"
+                  />
+                </svg>
+              </button>
+              <p
+                v-if="progress"
+                class="text-sm text-gray-500 whitespace-nowrap"
+              >
+                {{ progress }}%
               </p>
             </div>
           </div>
-          <!-- progress bar  -->
-          <div v-if="progress" class="mt-4 w-full">
+
+          <!-- Progress Bar -->
+          <div v-if="progress" class="mt-3">
             <ProgressBar :amount="progress" />
           </div>
         </div>
@@ -240,6 +276,7 @@
           Cancel
         </button>
         <button
+          :disabled="loadingCreateFile"
           @click="uploadFile"
           class="px-4 py-2 text-sm text-white bg-blue-600 rounded hover:bg-blue-700 focus:outline-none"
         >
@@ -550,6 +587,35 @@ const loading = ref(false);
 const showModal = ref(false);
 const uploadFileModal = ref(false);
 
+// utility functions
+function formatBytes(bytes, precision = 2) {
+  const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+  bytes = Math.max(bytes, 0);
+  const power = bytes > 0 ? Math.floor(Math.log(bytes) / Math.log(1024)) : 0;
+  const size = bytes / Math.pow(1024, power);
+  return `${size.toFixed(precision)} ${units[power]}`;
+}
+
+// loadings
+const loadingCreateFolder = ref(false);
+const loadingCreateFile = ref(false);
+
+function throttle(func, limit) {
+  let inThrottle = false;
+  return async (...args) => {
+    if (!inThrottle) {
+      inThrottle = true;
+      await func(...args);
+      setTimeout(() => {
+        inThrottle = false;
+      }, limit);
+    }
+  };
+}
+
+// throttle all buttons
+const handleCreateFolder = throttle(createFolder, 3000);
+
 const file = ref(null);
 const progress = ref(0);
 const isUploading = ref(false);
@@ -598,9 +664,11 @@ const uploadFile = async () => {
     alert('Please select a file.');
     return;
   }
+  loadingCreateFile.value = true;
 
   const totalChunks = Math.ceil(file.value.size / chunkSize);
   let uploadedBytesTotal = 0; // Track total uploaded bytes
+  let uploadedChuckSize = 0;
 
   isUploading.value = true;
   uploadStartTime.value = Date.now();
@@ -612,6 +680,7 @@ const uploadFile = async () => {
       fileName: file.value.name,
     });
     fileChunkIndex = response.data.data;
+    uploadedChuckSize = fileChunkIndex * chunkSize;
   } catch (error) {
     console.log('🚀 ~ uploadFile ~ error:', error);
   }
@@ -620,6 +689,7 @@ const uploadFile = async () => {
     const start = index * chunkSize;
     const end = Math.min(start + chunkSize, file.value.size);
     const chunk = file.value.slice(start, end);
+    const chunkSizeActual = end - start; // Actual size of this chunk (last chunk might be smaller)
 
     const formData = new FormData();
     formData.append('file', chunk);
@@ -637,13 +707,24 @@ const uploadFile = async () => {
           'Content-Type': 'multipart/form-data',
         },
         onUploadProgress: (progressEvent) => {
-          uploadedBytesTotal += progressEvent.loaded; // Accumulate bytes uploaded
-          const percentCompleted = Math.round(
-            (uploadedBytesTotal / file.value.size) * 100,
-          );
-          progress.value = percentCompleted; // Update progress dynamically
+          console.log('🚀 ~ uploadFile ~ progressEvent:', progressEvent);
+          if (progressEvent.loaded && progressEvent.total) {
+            // Calculate progress for current chunk only
+            const chunkProgress = Math.min(
+              progressEvent.loaded,
+              chunkSizeActual,
+            );
+            // Calculate total progress including previously uploaded chunks
+            const totalUploaded = uploadedChunksSize + chunkProgress;
+            const percentCompleted = Math.min(
+              Math.round((totalUploaded / file.value.size) * 100),
+              100, // Ensure we don't exceed 100%
+            );
+            progress.value = percentCompleted;
+          }
         },
       });
+      uploadedChuckSize += chunkSizeActual;
     } catch (error) {
       let errorMessage = 'Folder creation failed';
       if (error && error.response?.data?.message) {
@@ -651,6 +732,8 @@ const uploadFile = async () => {
       }
       console.error('Upload failed:', error);
       showToast(errorMessage, 'error', 5000);
+      loadingCreateFile.value = false;
+
       isUploading.value = false;
       progress.value = 0;
       file.value = null;
@@ -661,7 +744,8 @@ const uploadFile = async () => {
   isUploading.value = false;
   progress.value = 0;
   file.value = null;
-  // alert('File uploaded successfully!');
+  loadingCreateFile.value = false;
+
   showToast('File upload successful', 'success', 5000);
 };
 
@@ -692,6 +776,7 @@ function validateForm() {
 
 async function createFolder() {
   try {
+    loadingCreateFolder.value = true;
     let newPath = [...paths.value];
     if (validateForm()) {
       const response = await $axios.post(
@@ -709,6 +794,7 @@ async function createFolder() {
       }
       showModal.value = false;
     }
+    loadingCreateFolder.value = false;
   } catch (error) {
     console.log('🚀 ~ createFolder ~ error:', error);
     let errorMessage = 'Folder creation failed';
@@ -718,6 +804,7 @@ async function createFolder() {
     showToast(errorMessage, 'error', 5000);
 
     showModal.value = false;
+    loadingCreateFolder.value = false;
   }
 }
 
