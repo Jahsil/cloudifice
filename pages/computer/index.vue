@@ -971,6 +971,12 @@ const handleDeleteRequestFromChild = async (folder) => {
 
     if (response.data.status === 'OK') {
       showToast('Folder deletion successful', 'success', 5000);
+      let popIndex = folderDetails.value.indexOf(
+        (item) => item.name === folder.name,
+      );
+      if (popIndex !== -1) {
+        folderDetails.value.splice(popIndex, 1);
+      }
     }
   } catch (error) {
     console.log('🚀 ~ handleDeleteRequestFromChild ~ error:', error);
