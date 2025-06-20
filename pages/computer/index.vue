@@ -694,6 +694,7 @@ const uploadFile = async () => {
   } catch (error) {
     console.log('🚀 ~ uploadFile ~ error:', error);
   }
+  let response = null;
 
   for (let index = fileChunkIndex; index < totalChunks; index++) {
     // Exit loop if cancellation was requested
@@ -715,7 +716,7 @@ const uploadFile = async () => {
     );
 
     try {
-      await $axios.post('file/upload_file', formData, {
+      response = await $axios.post('file/upload_file', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -763,6 +764,7 @@ const uploadFile = async () => {
   abortController.value = null;
 
   showToast('File upload successful', 'success', 5000);
+  folderDetails.value.push(response?.data?.data);
 };
 
 const folderError = ref({
@@ -807,6 +809,7 @@ async function createFolder() {
       );
       if (response.data.status === 'OK') {
         showToast('Folder creation succesful', 'success', 5000);
+        folderDetails.value.push(response?.data?.data);
       }
       showModal.value = false;
     }
@@ -875,6 +878,10 @@ const fetchFiles = async (folder) => {
       });
 
       folderDetails.value = response.data.result;
+      console.log(
+        '🚀 ~ fetchFiles ~ folderDetails.value:',
+        folderDetails.value,
+      );
     }
   } catch (error) {
     console.log('🚀 ~ fetchFiles= ~ error:', error);
