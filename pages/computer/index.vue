@@ -668,7 +668,7 @@ const uploadFile = async () => {
 
   const totalChunks = Math.ceil(file.value.size / chunkSize);
   let uploadedBytesTotal = 0; // Track total uploaded bytes
-  let uploadedChuckSize = 0;
+  let uploadedChunksSize = 0;
 
   isUploading.value = true;
   uploadStartTime.value = Date.now();
@@ -680,7 +680,7 @@ const uploadFile = async () => {
       fileName: file.value.name,
     });
     fileChunkIndex = response.data.data;
-    uploadedChuckSize = fileChunkIndex * chunkSize;
+    uploadedChunksSize = fileChunkIndex * chunkSize;
   } catch (error) {
     console.log('🚀 ~ uploadFile ~ error:', error);
   }
@@ -724,7 +724,7 @@ const uploadFile = async () => {
           }
         },
       });
-      uploadedChuckSize += chunkSizeActual;
+      uploadedChunksSize += chunkSizeActual;
     } catch (error) {
       let errorMessage = 'Folder creation failed';
       if (error && error.response?.data?.message) {
