@@ -512,6 +512,8 @@
           <!-- Search -->
           <div class="relative">
             <input
+              @input="searchFolders($event)"
+              v-model="searchFolder"
               type="text"
               placeholder="Search..."
               class="pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 w-32 sm:w-40"
@@ -543,7 +545,7 @@
           @file="handleFileClickFromChild"
           @deleteFolder="handleDeleteRequestFromChild"
           :size="slider"
-          :folders="folderDetails"
+          :folders="searchFolder ? filteredFolders : folderDetails"
         />
       </div>
     </div>
@@ -666,6 +668,16 @@ const timeRemaining = computed(() => {
   }
   return null;
 });
+
+const searchFolder = ref('');
+const filteredFolders = ref([]);
+const searchFolders = (event) => {
+  if (searchFolder.value.length > 0) {
+    filteredFolders.value = folderDetails.value.filter((folder) =>
+      folder.name.includes(searchFolder.value),
+    );
+  }
+};
 
 const uploadFile = async () => {
   if (!file.value) {
@@ -878,10 +890,6 @@ const fetchFiles = async (folder) => {
       });
 
       folderDetails.value = response.data.result;
-      console.log(
-        '🚀 ~ fetchFiles ~ folderDetails.value:',
-        folderDetails.value,
-      );
     }
   } catch (error) {
     console.log('🚀 ~ fetchFiles= ~ error:', error);
