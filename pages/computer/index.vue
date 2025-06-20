@@ -158,6 +158,7 @@
               ref="fileInput"
               class="hidden"
               @change="handleFileChange"
+              @click="resetFileInput"
             />
           </div>
         </div>
@@ -634,7 +635,9 @@ const viewFileUrl = ref('');
 function triggerFileUpload() {
   fileInput.value.click();
 }
-
+function resetFileInput() {
+  fileInput.value.value = '';
+}
 function handleFileChange(event) {
   file.value = event.target.files[0];
   if (file.value) {
@@ -737,7 +740,7 @@ const uploadFile = async () => {
 
       uploadedChunksSize += chunkSizeActual;
     } catch (error) {
-      if ($axios.isCancel(error)) {
+      if (error.code === 'ERR_CANCELED') {
         showToast('Upload cancelled', 'warning', 5000);
       } else {
         showToast(error.response?.data?.message || 'Upload failed', 'error');
@@ -757,6 +760,7 @@ const uploadFile = async () => {
   progress.value = 0;
   file.value = null;
   loadingCreateFile.value = false;
+  abortController.value = null;
 
   showToast('File upload successful', 'success', 5000);
 };
