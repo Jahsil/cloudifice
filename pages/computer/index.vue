@@ -672,10 +672,13 @@ const timeRemaining = computed(() => {
 const searchFolder = ref('');
 const filteredFolders = ref([]);
 const searchFolders = (event) => {
+  let search = searchFolder.value.toLowerCase();
+
   if (searchFolder.value.length > 0) {
-    filteredFolders.value = folderDetails.value.filter((folder) =>
-      folder.name.includes(searchFolder.value),
-    );
+    filteredFolders.value = folderDetails.value.filter((folder) => {
+      const folderName = (folder.name || '').toLowerCase();
+      return folderName.includes(search);
+    });
   }
 };
 
