@@ -645,7 +645,12 @@ function handleFileChange(event) {
   }
 }
 
+const abortController = ref(null);
+
 function removeFile() {
+  if (abortController.value && !abortController.value.signal.aborted) {
+    abortController.value.abort(); // Triggers cancellation
+  }
   fileInput.value = null;
   file.value = null;
 }
@@ -665,6 +670,8 @@ const uploadFile = async () => {
     return;
   }
   loadingCreateFile.value = true;
+
+  abortController.value = new AbortController();
 
   const totalChunks = Math.ceil(file.value.size / chunkSize);
   let uploadedBytesTotal = 0; // Track total uploaded bytes
@@ -686,6 +693,9 @@ const uploadFile = async () => {
   }
 
   for (let index = fileChunkIndex; index < totalChunks; index++) {
+    // Exit loop if cancellation was requested
+    if (abortController.value.signal.aborted) break;
+
     const start = index * chunkSize;
     const end = Math.min(start + chunkSize, file.value.size);
     const chunk = file.value.slice(start, end);
@@ -706,8 +716,8 @@ const uploadFile = async () => {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
+        signal: abortController.value.signal,
         onUploadProgress: (progressEvent) => {
-          console.log('🚀 ~ uploadFile ~ progressEvent:', progressEvent);
           if (progressEvent.loaded && progressEvent.total) {
             // Calculate progress for current chunk only
             const chunkProgress = Math.min(
@@ -724,14 +734,16 @@ const uploadFile = async () => {
           }
         },
       });
+
       uploadedChunksSize += chunkSizeActual;
     } catch (error) {
-      let errorMessage = 'Folder creation failed';
-      if (error && error.response?.data?.message) {
-        errorMessage = error.response?.data?.message;
+      if ($axios.isCancel(error)) {
+        showToast('Upload cancelled', 'warning', 5000);
+      } else {
+        showToast(error.response?.data?.message || 'Upload failed', 'error');
+        console.error('Upload error:', error);
       }
-      console.error('Upload failed:', error);
-      showToast(errorMessage, 'error', 5000);
+
       loadingCreateFile.value = false;
 
       isUploading.value = false;
